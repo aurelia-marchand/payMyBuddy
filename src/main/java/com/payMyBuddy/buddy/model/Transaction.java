@@ -34,7 +34,7 @@ public class Transaction {
   @Column(name = "transaction_id")
   private long transactionId;
 
-  private long amount;
+  private BigDecimal amount;
 
   @Column(name = "date_transaction")
   private LocalDate dateTransaction;

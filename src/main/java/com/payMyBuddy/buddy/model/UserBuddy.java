@@ -21,10 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
-/************************************************************/
-/**
- * 
- */
+
 @Data
 @Entity
 @Table(name = "user_buddy", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -110,8 +107,9 @@ public class UserBuddy {
   /**
    * user contacts
    */
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(name = "connexion", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "user_associate_id", referencedColumnName = "user_id"))
   private Set<UserBuddy> contacts;
+  
 
 };

@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
   @Autowired
   private UserBuddyServiceI userService;
   
+ 
   protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
     auth.authenticationProvider(authenticationProvider());
 }
@@ -47,19 +48,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
       .authorizeRequests()
       .antMatchers("/admin").hasRole("ADMIN")
       .antMatchers("/admin").hasRole("ADMIN")
-      .antMatchers("/home", "/transfer").hasRole("USER")
+      .antMatchers("/home", "/transfer").hasAnyRole("ADMIN","USER")
       .antMatchers("/login", "/suscribe", "/css/**").permitAll()
-      //.anyRequest().authenticated()
       .and()
       .formLogin().loginPage("/login")
       .defaultSuccessUrl("/home", true)
       .failureUrl("/login?error=true")
       .and()
-      .logout()
+      .logout().deleteCookies("JSESSIONID")
       .invalidateHttpSession(true)
       .clearAuthentication(true)
       .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
       .logoutSuccessUrl("/login?logout");
+      
   }
   
  

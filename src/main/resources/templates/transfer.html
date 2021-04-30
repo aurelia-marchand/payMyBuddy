@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +11,7 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
 	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
 	crossorigin="anonymous">
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
 
 <link href=signin.css rel="stylesheet">
 
@@ -18,7 +20,7 @@
 <style>
 body {
 	padding-top: 50px;
-	padding-bottom : 50px;
+	padding-bottom: 50px;
 }
 
 .special {
@@ -35,19 +37,23 @@ body {
 				my buddy</button>
 			<div>
 				<ul class="nav navbar-right">
-					<li class="nav-item"><a class="nav-link " href="home.html">Home</a></li>
-					<li class="nav-item"><a class="nav-link active" href="transfer.html">Transfer</a></li>
-					<li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
-					<li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Log off</a></li>
+					<li class="nav-item"><a class="nav-link " href="home">Home</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="transfer">Transfer</a></li>
+					<li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
+					<li class="nav-item"><a class="nav-link" href="contact">Contact</a></li>
+					<li class="nav-item" sec:authorize="isAuthenticated()"><form th:action="@{/logout}"
+							method="post">
+							<input class="nav-link btn btn-primary"  type="submit" value="Log Out" />
+						</form></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<nav class="nav navbar-left bg-light">
 		<ul class="nav navbar-right">
-			<li class="nav-item"><a class="nav-link" href="home.html">Home /</a></li>
-			<li class="nav-item"><a class="nav-link active" href="transfer.html">Transfer</a></li>
+			<li class="nav-item"><a class="nav-link" href="home">Home /</a></li>
+			<li class="nav-item"><a class="nav-link active" href="transfer">Transfer</a></li>
 		</ul>
 	</nav>
 
@@ -55,11 +61,14 @@ body {
 
 		<div class="row mt-3 mb-1 justify-content-between">
 			<div class="ml-4">
+
 				<span class="text-left"><h4>Send Money</h4></span>
 			</div>
 			<div class="mr-4">
-				<button class="btn btn-primary">Add connection</button>
+				<button class="btn btn-primary" data-toggle="modal"
+					data-target="#connection">Add connection</button>
 			</div>
+
 		</div>
 
 		<div class="row">
@@ -68,29 +77,81 @@ body {
 
 					<div class="card-body text-center">
 
-						<form class="form-inline">
+						<!-- success message -->
+						<div th:if="${param.successAddConnection}" class="mt-1">
+							<div class="alert alert-info">Add Connection ok !</div>
+						</div>
+						<!-- error message -->
+						<div th:if="${param.errorAddConnection}" class="mt-1">
+							<div class="alert alert-danger">No account found !</div>
+						</div>
+						<!-- error message -->
+						<div th:if="${param.errorNotEnoughMoney}" class = "mt-1">
+							<div class="alert alert-danger">not enough money !</div>
+						</div>
+						<!-- success message -->
+						<div th:if="${param.successPayment}" class = "mt-1">
+							<div class="alert alert-info">You've successfully do transfer !</div>
+						</div>
 
-							<div class="col-md-3 dropdown">
-								<button class="btn btn-secondary dropdown-toggle" type="button"
-									id="dropdownMenuButton" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">Select a
-									connection</button>
-								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a class="dropdown-item" href="#">liste des amis</a> <a
-										class="dropdown-item" href="#">amis 2</a> <a
-										class="dropdown-item" href="#">amis 3</a>
-								</div>
+						<form class="form-inline" th:action="@{/transfer/transfer}" method="POST" th:object="${transaction}">
+
+							<!-- Select connection -->
+
+							<select class="form-select form-select-lg form-control"
+								aria-label="Default select example" name="mailBeneficiary" >
+
+								<option th:each="contact : ${contacts}"
+									th:value="${contact.email}" th:text="${contact.email}"  ></option>
+
+							</select>
+							<!-- End select connection -->
+							
+							<div class="col-md-3">
+								<label for="description"></label> <input class="form-control "
+									type="text" id="description"
+									placeholder="Description message !" name="description">
 							</div>
+
 							<div class="col-md-3">
 								<label for="example-number-input"></label> <input
 									class="form-control " type="number" value="0"
-									id="example-number-input">
+									id="amount" name="amount">
 							</div>
 							<div class="col-md-3">
 								<button type="submit" class="btn  btn-block btn-success">Pay</button>
 							</div>
 
 						</form>
+
+						<!-- Pop-up add connection -->
+						<div id="connection" class="modal">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<p>Connection</p>
+									</div>
+									<div class="modal-body">
+										<form th:action="@{/transfer/connection}" method="POST"
+											th:object="${user}">
+											<div class="form-group">
+												<label for="email">Email</label> <input type="email"
+													class="form-control" id="email" aria-describedby="email"
+													placeholder="email" name="email" required
+													autofocus="autofocus">
+											</div>
+											<p></p>
+											<button type="submit" class="btn btn-primary">Ajouter</button>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">Annuler</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End pop up connection -->
 					</div>
 				</div>
 			</div>
@@ -113,36 +174,30 @@ body {
 				<div class="card bg-light">
 					<div class="card-body text-center">
 
-						<table class="table table-hover">
-							<thead>
-								<tr class="table-success">
+						<table class="table table-hover table-striped" data-toggle="table" data-pagination="true" >
+							<thead class="table-success">
+								<tr >
 									<th scope="col">Connections</th>
 									<th scope="col">Descriptions</th>
-									<th scope="col">Ammount</th>
+									<th scope="col" >Amount</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>Mark</td>
-									<td>Mark</td>
-									<td>Otto</td>
+								<tr th:if="${transactions.empty}" >
+									<td colspan="3">Aucune transaction enregistrée</td>
 								</tr>
-								<tr>
-									<td>Jacob</td>
-									<td>Jacob</td>
-									<td>Thornton</td>
-								</tr>
-								<tr>
-									<td>Jacob</td>
-									<td>Jacob</td>
-									<td>Thornton</td>
+								<tr th:each="transactions: ${transactions}" >
+									<td>	<span
+									 th:text="${transactions.beneficiaryId.userBuddy.email}" ></span></td>
+									<td><span th:text="${transactions.description}"></span></td>
+									<td><span th:text="${transactions.amount}"></span></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
 				</div>
-				<nav aria-label="Page navigation example"">
+				<!--  	<nav aria-label="Page navigation example"">
 					<ul class="pagination justify-content-center">
 						<li class="page-item"><a class="page-link" href="#"
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
@@ -158,7 +213,7 @@ body {
 								class="sr-only">Next</span>
 						</a></li>
 					</ul>
-				</nav>
+				</nav>-->
 			</div>
 		</div>
 	</div>
@@ -174,5 +229,6 @@ body {
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
 		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 		crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
 </html>

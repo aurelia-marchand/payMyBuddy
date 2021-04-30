@@ -1,27 +1,26 @@
 package com.payMyBuddy.buddy.controller;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.payMyBuddy.buddy.dto.BankAccountDto;
 import com.payMyBuddy.buddy.dto.TransactionDto;
+import com.payMyBuddy.buddy.dto.UserConnectionDto;
 import com.payMyBuddy.buddy.model.Account;
-import com.payMyBuddy.buddy.model.BankAccount;
-import com.payMyBuddy.buddy.model.Role;
+import com.payMyBuddy.buddy.model.Transaction;
+import com.payMyBuddy.buddy.model.Type;
 import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.service.AccountServiceI;
-import com.payMyBuddy.buddy.service.BankAccountServiceI;
+import com.payMyBuddy.buddy.service.ConnectionServiceI;
 import com.payMyBuddy.buddy.service.TransactionServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
@@ -29,9 +28,8 @@ import lombok.extern.log4j.Log4j2;
 
 @Controller
 @Log4j2
-@RequestMapping("/home")
-@Validated
-public class homeController {
+@RequestMapping("/transfer")
+public class transferController {
 
   @Autowired
   AccountServiceI AccountServiceI;
@@ -43,20 +41,15 @@ public class homeController {
   TransactionServiceI transactionServiceI;
 
   @Autowired
-  BankAccountServiceI bankAccountServiceI;
+  ConnectionServiceI connectionServiceI;
 
-  @ModelAttribute("bankAccountadd")
-  public BankAccountDto bankAccountDto() {
-    return new BankAccountDto();
-  }
-
-  @ModelAttribute("withdraw")
+  @ModelAttribute("transaction")
   public TransactionDto transactionDto() {
     return new TransactionDto();
   }
 
   @GetMapping
-  public String home(Model model) {
+  public String transfer(Model model) {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
@@ -64,42 +57,48 @@ public class homeController {
     UserBuddy user = userBuddyServiceI.findOne(username);
 
     Account account = AccountServiceI.findByUserAccountId(user);
-    BankAccount bankAccount = user.getBankAccount();
-    model.addAttribute("account", account);
-    model.addAttribute("bankAccount", bankAccount);
 
-    Collection<Role> roles = user.getRoles();
-    if (roles.toString().contains("ROLE_ADMIN")) {
-      return "admin";
-    }
-    return "home";
+    Iterable<Transaction> listTransaction = null;
+
+    // listTransaction = transactionServiceI.findAllBySenderId(account);
+
+    listTransaction = transactionServiceI.findAllBySenderIdAndType(account, Type.USER_TO_USER);
+
+    Set<UserBuddy> contacts = user.getContacts();
+
+    model.addAttribute("transactions", listTransaction);
+    model.addAttribute("contacts", contacts);
+
+    return "transfer";
+
   }
 
-  @PostMapping
+  @PostMapping("/connection")
+  public String addConnection(@ModelAttribute("user") UserConnectionDto userConnectionDto) {
+
+    if (userBuddyServiceI.existsUserBuddyByEmail(userConnectionDto.getEmail())) {
+      connectionServiceI.add(userConnectionDto);
+      return "redirect:/transfer?successAddConnection";
+    } else {
+      return "redirect:/transfer?errorAddConnection";
+    }
+  }
+
+  @PostMapping("/transfer")
   public String transfer(@ModelAttribute("transaction") TransactionDto transactionDto) {
 
     if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
 
+      transactionDto.setType(Type.USER_TO_USER);
+      log.debug("transactionController : " + transactionDto);
       String reponse = transactionServiceI.save(transactionDto);
       if (reponse == "success") {
-        return "redirect:/home?successPayment";
+        return "redirect:/transfer?successPayment";
       } else if (reponse == "errorNotEnoughMoney") {
-        return "redirect:/home?errorNotEnoughMoney";
-      } else {
-        return "redirect:/home?errorZero";
+        return "redirect:/transfer?errorNotEnoughMoney";
       }
-    } else {
-      return "redirect:/home?error";
     }
-  }
-
-  @PostMapping("/addBankAccount")
-  public String addBankAccount(@ModelAttribute("bankAccountadd") BankAccountDto bankAccountDto) {
-
-    
-    bankAccountServiceI.save(bankAccountDto);
-
-    return "redirect:/home?successAddBankAccount";
+    return "redirect:/transfer?errorZero";
 
   }
 }

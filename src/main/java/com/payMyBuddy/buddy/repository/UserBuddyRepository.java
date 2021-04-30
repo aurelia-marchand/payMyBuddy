@@ -10,4 +10,6 @@ public interface UserBuddyRepository extends JpaRepository<UserBuddy, Long> {
 
   UserBuddy findByemail(String email);
 
+  boolean existsUserBuddyByEmail(String email);
+
 }

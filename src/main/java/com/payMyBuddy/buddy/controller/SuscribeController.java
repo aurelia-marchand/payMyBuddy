@@ -11,31 +11,44 @@ import com.payMyBuddy.buddy.dto.UserRegistrationDto;
 import com.payMyBuddy.buddy.service.RoleServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
+import lombok.extern.log4j.Log4j2;
+
 @Controller
 @RequestMapping("/suscribe")
+@Log4j2
 public class SuscribeController {
 
   @Autowired
   UserBuddyServiceI userBuddyServiceI;
-  
+
   @Autowired
   RoleServiceI roleServiceI;
-  
+
   @ModelAttribute("user")
   public UserRegistrationDto userRegistrationDto() {
     return new UserRegistrationDto();
   }
-  
+
   @GetMapping
   public String showRegistrationForm() {
     return "suscribe";
   }
-  
+
   @PostMapping
-  public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
-    userBuddyServiceI.save(userRegistrationDto);
-    
-    return "redirect:/suscribe?success";
+  public String registerUserAccount(
+      @ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
+
+    if (userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())) {
+      
+      return "redirect:/suscribe?error";
     }
-  
+     else {
+       
+      userBuddyServiceI.save(userRegistrationDto);
+ 
+      return "redirect:/suscribe?successRegistration";
+    }
+
+  }
+
 }

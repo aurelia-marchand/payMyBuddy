@@ -41,8 +41,18 @@ body {
 						<form th:action="@{/suscribe}" method="POST" th:object = "${user}">
 						
 						<!-- success message -->
-						<div th:if="${param.success}" class = "mt-1">
+						<div th:if="${param.successRegistration}" class = "mt-1">
 							<div class="alert alert-info">You've successfully registered to our app! Click to login now link to connect !</div>
+						</div>
+						
+						<!-- success message -->
+						<div th:if="${param.problem}" class = "mt-1">
+							<div class="alert alert-warning">problem during save</div>
+						</div>
+						
+						<!-- error message -->
+						<div th:if="${param.error}" class = "mt-1">
+							<div class="alert alert-warning">Email account already exist !!</div>
 						</div>
 						
 							<!-- User email -->
