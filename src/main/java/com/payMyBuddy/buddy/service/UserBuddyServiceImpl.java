@@ -1,17 +1,9 @@
 package com.payMyBuddy.buddy.service;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,24 +28,37 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+  
+  
 
   @Override
   @Transactional
   public UserBuddy save(UserRegistrationDto userRegistrationDto) {
+    
+    UserBuddy userSet = userSet(userRegistrationDto);
+    UserBuddy userBuddy = userBuddyRepository.save(userSet);
+    accountServiceI.save(userBuddy);
+    
+    return userBuddy;
+  }
+  
+  /**
+   * Set Email and encode password before save in database
+   * @param userRegistrationDto
+   * @return user to save
+   */
+  public UserBuddy userSet(UserRegistrationDto userRegistrationDto) {
     UserBuddy user = new UserBuddy();
     
     user.setEmail(userRegistrationDto.getEmail());
     user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
-    log.debug("mail : " + userRegistrationDto.getEmail());
     if(userRegistrationDto.getEmail().equalsIgnoreCase("admin4@paymybuddy.com")) {
       user.setRoles(Arrays.asList(new Role("ROLE_ADMIN")));
     }else {
       user.setRoles(Arrays.asList(new Role("ROLE_USER")));
     }
-    UserBuddy userBuddy = userBuddyRepository.save(user);
-    accountServiceI.save(userBuddy);
     
-    return userBuddy;
+    return user;
   }
 
   @Override
@@ -66,21 +71,7 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     return userBuddyRepository.findByemail(email);
   }
 
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-    UserBuddy user = userBuddyRepository.findByemail(username);
-    if (user == null) {
-      throw new UsernameNotFoundException("Invalid email or password");
-    }
-    return new org.springframework.security.core.userdetails.User(user.getEmail(),
-        user.getPassword(), mapRolesAuthorities(user.getRoles()));
-  }
-
-  private Collection<? extends GrantedAuthority> mapRolesAuthorities(Collection<Role> roles) {
-    return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
-        .collect(Collectors.toList());
-  }
+  
 
   @Override
   public boolean existsUserBuddyByEmail(String email) {
@@ -91,13 +82,17 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
   @Override
   public UserBuddy save(UserProfileDto userDto) {
     UserBuddy user = new UserBuddy();
+  
+    user = userBuddyRepository.findByemail(userDto.getEmail());
     
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    user = userBuddyRepository.findByemail(username);
+    log.debug("userDto : " + userDto);
+    log.debug("user : " + user);
+
     
     UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
     
+    log.debug("userToUpdate : " + userToUpdate);
+
     
     userToUpdate.setLastName(userDto.getLastName());
     userToUpdate.setFirstName(userDto.getFirstName());
@@ -107,11 +102,7 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     userToUpdate.setCity(userDto.getCity());
     userToUpdate.setPhone(userDto.getPhone());
 
-
-
     UserBuddy userBuddy = userBuddyRepository.save(userToUpdate);
-    
-    
     
     return userBuddy;
   }

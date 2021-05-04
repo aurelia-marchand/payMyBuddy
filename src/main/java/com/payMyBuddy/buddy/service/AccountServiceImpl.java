@@ -25,16 +25,19 @@ public class AccountServiceImpl implements AccountServiceI{
   }
 
   @Override
-  public Account save(UserBuddy user) {
-    
+  public String save(UserBuddy user) {
+    log.debug("user" + user);
     Account account = new Account();
     account.setBalance(new BigDecimal("0"));
 
     account.setUserBuddy(user);
+    log.debug("account" + account);
+
     
-    Account account2 = accountRepository.save(account);
+    accountRepository.save(account);
+
     
-    return account2;
+    return "success";
   }
 
   

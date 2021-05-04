@@ -39,11 +39,12 @@ public class SuscribeController {
       @ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
 
     if (userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())) {
-      
+      log.debug("true : " + userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail()));
       return "redirect:/suscribe?error";
     }
      else {
-       
+       log.debug("false : " + userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail()));
+
       userBuddyServiceI.save(userRegistrationDto);
  
       return "redirect:/suscribe?successRegistration";

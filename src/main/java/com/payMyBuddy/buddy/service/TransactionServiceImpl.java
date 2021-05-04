@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +48,7 @@ public class TransactionServiceImpl implements TransactionServiceI {
     // preparing the entity to persist
     Transaction transactionPayment = new Transaction();
 
-    // recovery identity user connected, the entity and this account
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    UserBuddy user = userBuddyServiceI.findOne(username);
-    Account account = accountServiceI.findByUserAccountId(user);
-
+    Account account = transactionDto.getSenderId();
     // update transaction with Dto received
     transactionPayment.setAmount(transactionDto.getAmount());
     transactionPayment.setDateTransaction(LocalDate.now());
@@ -79,6 +72,7 @@ public class TransactionServiceImpl implements TransactionServiceI {
 
       transactionPayment
           .setFee(transactionDto.getAmount().multiply(new BigDecimal(BuddyConstant.FEE)));
+    
       // verify amount and balance account before doing the transaction
       if (transactionDto.getType().equals(Type.USER_TO_USER) && account.getBalance()
           .compareTo(transactionDto.getAmount().add(transactionPayment.getFee())) < 0) {
@@ -106,14 +100,13 @@ public class TransactionServiceImpl implements TransactionServiceI {
 
       Account accountToUpdate = accountRepository.getOne(account.getAccountId());
       if (transactionPayment.getDescription().equalsIgnoreCase("withdraw")) {
-        log.debug("service transaction withdraw  : " + transactionPayment);
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getAmount()));
       } else if (transactionPayment.getDescription().equalsIgnoreCase("payment")) {
-        log.debug("service transaction payment  : " + transactionPayment);
         accountToUpdate.setBalance(account.getBalance().add(transactionPayment.getAmount()));
       } else {
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getAmount()));
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getFee()));
+       
         Account accountBeneficiary = accountRepository.getOne(accountB.getAccountId());
         accountBeneficiary.setBalance(accountB.getBalance().add(transactionPayment.getAmount()));
         accountRepository.save(accountBeneficiary);

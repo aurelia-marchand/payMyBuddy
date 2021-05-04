@@ -31,10 +31,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequestMapping("/home")
 @Validated
-public class homeController {
-
-  @Autowired
-  AccountServiceI AccountServiceI;
+public class HomeController {
 
   @Autowired
   UserBuddyServiceI userBuddyServiceI;
@@ -44,6 +41,9 @@ public class homeController {
 
   @Autowired
   BankAccountServiceI bankAccountServiceI;
+
+  @Autowired
+  AccountServiceI accountServiceI;
 
   @ModelAttribute("bankAccountadd")
   public BankAccountDto bankAccountDto() {
@@ -57,18 +57,24 @@ public class homeController {
 
   @GetMapping
   public String home(Model model) {
+    log.debug("avant : " + model);
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
 
     UserBuddy user = userBuddyServiceI.findOne(username);
+log.debug("user : " + user);
+    Account account = accountServiceI.findByUserAccountId(user);
+    log.debug("account : " + account);
 
-    Account account = AccountServiceI.findByUserAccountId(user);
     BankAccount bankAccount = user.getBankAccount();
     model.addAttribute("account", account);
     model.addAttribute("bankAccount", bankAccount);
+    log.debug("model : " + model);
 
     Collection<Role> roles = user.getRoles();
+    log.debug("roles : " + roles);
+
     if (roles.toString().contains("ROLE_ADMIN")) {
       return "admin";
     }
@@ -78,8 +84,20 @@ public class homeController {
   @PostMapping
   public String transfer(@ModelAttribute("transaction") TransactionDto transactionDto) {
 
-    if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+    // recovery identity user connected, the entity and this account
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    UserBuddy user = userBuddyServiceI.findOne(username);
+    Account account = accountServiceI.findByUserAccountId(user);
+    
+    log.debug("transactionDto : " + transactionDto);
+    log.debug("username : " + username);
+    log.debug("user: " + user);
+    log.debug("account: " + account);
 
+
+    if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+      transactionDto.setSenderId(account);
       String reponse = transactionServiceI.save(transactionDto);
       if (reponse == "success") {
         return "redirect:/home?successPayment";
@@ -91,11 +109,15 @@ public class homeController {
     } else {
       return "redirect:/home?error";
     }
+    
   }
 
   @PostMapping("/addBankAccount")
   public String addBankAccount(@ModelAttribute("bankAccountadd") BankAccountDto bankAccountDto) {
 
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
+    String username = authentication.getName();
+    bankAccountDto.setEmail(username);
     
     bankAccountServiceI.save(bankAccountDto);
 

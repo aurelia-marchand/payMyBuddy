@@ -29,10 +29,7 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 @Log4j2
 @RequestMapping("/transfer")
-public class transferController {
-
-  @Autowired
-  AccountServiceI AccountServiceI;
+public class TransferController {
 
   @Autowired
   UserBuddyServiceI userBuddyServiceI;
@@ -42,6 +39,9 @@ public class transferController {
 
   @Autowired
   ConnectionServiceI connectionServiceI;
+
+  @Autowired
+  AccountServiceI accountServiceI;
 
   @ModelAttribute("transaction")
   public TransactionDto transactionDto() {
@@ -53,18 +53,18 @@ public class transferController {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
-
+    log.debug("username" + username);
     UserBuddy user = userBuddyServiceI.findOne(username);
-
-    Account account = AccountServiceI.findByUserAccountId(user);
+    log.debug("user" + user);
+    Account account = accountServiceI.findByUserAccountId(user);
+    log.debug("account" + account);
 
     Iterable<Transaction> listTransaction = null;
 
-    // listTransaction = transactionServiceI.findAllBySenderId(account);
-
     listTransaction = transactionServiceI.findAllBySenderIdAndType(account, Type.USER_TO_USER);
-
+    log.debug("listTransaction" + listTransaction);
     Set<UserBuddy> contacts = user.getContacts();
+    log.debug("contacts" + contacts);
 
     model.addAttribute("transactions", listTransaction);
     model.addAttribute("contacts", contacts);
@@ -87,10 +87,16 @@ public class transferController {
   @PostMapping("/transfer")
   public String transfer(@ModelAttribute("transaction") TransactionDto transactionDto) {
 
-    if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+    // recovery identity user connected, the entity and this account
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    UserBuddy user = userBuddyServiceI.findOne(username);
+    Account account = accountServiceI.findByUserAccountId(user);
 
+    if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+      transactionDto.setSenderId(account);
       transactionDto.setType(Type.USER_TO_USER);
-      log.debug("transactionController : " + transactionDto);
+      log.debug("transactionController : " + transactionDto.getSenderId());
       String reponse = transactionServiceI.save(transactionDto);
       if (reponse == "success") {
         return "redirect:/transfer?successPayment";

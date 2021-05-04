@@ -7,7 +7,7 @@ public interface AccountServiceI {
 
   Account findByUserAccountId(UserBuddy user);
 
-  Account save(UserBuddy user);
+  String save(UserBuddy user);
 
  
 }

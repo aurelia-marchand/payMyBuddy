@@ -1,8 +1,6 @@
 package com.payMyBuddy.buddy.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.payMyBuddy.buddy.dto.BankAccountDto;
@@ -11,7 +9,10 @@ import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.repository.BankAccountRepository;
 import com.payMyBuddy.buddy.repository.UserBuddyRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class BankAccountServiceImpl implements BankAccountServiceI{
 
   @Autowired
@@ -30,6 +31,8 @@ public class BankAccountServiceImpl implements BankAccountServiceI{
     //TODO look type return
     BankAccount bankAccount = new BankAccount();
     
+    log.debug("bDto"+ bankAccountDto);
+    
     bankAccount.setCodeBank(bankAccountDto.getCodeBank());
     bankAccount.setBankCounterCode(bankAccountDto.getBankCounterCode());
     bankAccount.setAccountNumber(bankAccountDto.getAccountNumber());
@@ -39,17 +42,25 @@ public class BankAccountServiceImpl implements BankAccountServiceI{
     bankAccount.setBic(bankAccountDto.getBic());
     bankAccount.setHolder(bankAccountDto.getHolder());
     
+    log.debug("bankAccount"+ bankAccount);
+
     bankAccountRepository.save(bankAccount);
    
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
-    String username = authentication.getName();
+//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
+//    String username = authentication.getName();
     
-    UserBuddy user = userBuddyServiceI.findOne(username);
+    UserBuddy user = userBuddyServiceI.findOne(bankAccountDto.getEmail());
+    log.debug("user"+ user);
+
     Long id = user.getId();
+    log.debug("id"+ id);
+
     UserBuddy userToUpdate = userBuddyRepository.getOne(id);
+    log.debug("userToUpdate"+ userToUpdate);
+
     userToUpdate.setBankAccount(bankAccount);
     userBuddyRepository.save(userToUpdate);
- 
+    log.debug("userToUpdate"+ userToUpdate);
     return "success";
     
   }
