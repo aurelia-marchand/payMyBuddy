@@ -107,7 +107,7 @@ public class UserBuddy {
   /**
    * user contacts
    */
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
   @JoinTable(name = "connexion", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "user_associate_id", referencedColumnName = "user_id"))
   private Set<UserBuddy> contacts;
   

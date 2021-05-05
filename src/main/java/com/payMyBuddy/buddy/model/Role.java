@@ -31,10 +31,5 @@ public class Role {
   
   private String name;
   
-  //@Column(name = "username")
-  //private String mail;
-  
-  //@Column(name = "role")
-  //private String role;
 
 }
