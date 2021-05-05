@@ -27,6 +27,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     UserBuddy user = userBuddyRepository.findByemail(username);
     if (user == null) {
       throw new UsernameNotFoundException("Invalid email or password");
+    } if (user.isActive() == false) {
+      throw new UsernameNotFoundException("Your account is inactive");
     }
     return new org.springframework.security.core.userdetails.User(user.getEmail(),
         user.getPassword(), mapRolesAuthorities(user.getRoles()));

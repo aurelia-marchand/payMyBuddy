@@ -8,16 +8,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.dto.UserProfileDto;
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
 import com.payMyBuddy.buddy.model.Role;
 import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.repository.UserBuddyRepository;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Log4j2
+@Slf4j
 public class UserBuddyServiceImpl implements UserBuddyServiceI {
 
   @Autowired
@@ -105,6 +106,20 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     UserBuddy userBuddy = userBuddyRepository.save(userToUpdate);
     
     return userBuddy;
+  }
+
+  @Override
+  public void unsuscribe(UserDto userDto) {
+    UserBuddy user = new UserBuddy();
+    
+    user = userBuddyRepository.findByemail(userDto.getEmail());
+    
+    UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
+    userToUpdate.setActive(false);
+    String email = userToUpdate.getEmail();
+    userToUpdate.setEmail("unsuscribe"+email);
+    UserBuddy userBuddy =  userBuddyRepository.save(userToUpdate);
+    log.debug("user inactive: " + userBuddy);
   }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.payMyBuddy.buddy.dto.BankAccountDto;
 import com.payMyBuddy.buddy.dto.TransactionDto;
+import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.model.Account;
 import com.payMyBuddy.buddy.model.BankAccount;
 import com.payMyBuddy.buddy.model.Role;
@@ -122,6 +123,21 @@ log.debug("user : " + user);
     bankAccountServiceI.save(bankAccountDto);
 
     return "redirect:/home?successAddBankAccount";
+
+  }
+  
+  @PostMapping("/unsuscribe")
+  public String unsuscribe(@ModelAttribute("userS") UserDto userDto) {
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
+    String username = authentication.getName();
+    
+    if(username == userDto.getEmail()) {
+      return "redirect:/logout";
+    }
+    
+
+    return "redirect:/home";
 
   }
 }

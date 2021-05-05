@@ -2,6 +2,7 @@ package com.payMyBuddy.buddy.service;
 
 import java.util.List;
 
+import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.dto.UserProfileDto;
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
 import com.payMyBuddy.buddy.model.UserBuddy;
@@ -17,5 +18,7 @@ public interface UserBuddyServiceI {
   boolean existsUserBuddyByEmail(String email);
 
   UserBuddy save(UserProfileDto userDto);
+
+  void unsuscribe(UserDto userDto);
   
 }

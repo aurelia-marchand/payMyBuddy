@@ -64,8 +64,9 @@ body {
 			<div class="ml-4">
 				<span class="text-left"><h4>Your Account</h4></span>
 			</div>
-			<div class="mr-4">
-				<button class="btn btn-primary">Unsuscribe</button>
+			<div class="mr-4"><form
+							th:action="@{/unsuscribe}" method="get">
+				<button class="btn btn-primary " >Unsuscribe</button></form>
 			</div>
 		</div>
 
@@ -424,6 +425,7 @@ body {
 												</div>
 											</div>
 										</div>
+										
 
 									</div>
 
