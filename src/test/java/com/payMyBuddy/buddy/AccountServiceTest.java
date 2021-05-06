@@ -44,7 +44,7 @@ class AccountServiceTest {
   Account account2 = new Account();
 
   @Test
-  void test() {
+  void testNewAccount() {
     //ARRANGE
     Account account = new Account();
     UserBuddy user = new UserBuddy();
@@ -65,8 +65,6 @@ class AccountServiceTest {
     //Assert
     assertThat(account2.getUserBuddy()).isEqualTo(user);
     assertThat(result).isEqualToIgnoringCase("success");
-
-   
 
   }
 

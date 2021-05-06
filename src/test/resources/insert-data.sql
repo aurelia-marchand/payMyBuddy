@@ -1,3 +1,10 @@
+DELETE FROM pay_my_buddy_test.connexion;
+DELETE FROM pay_my_buddy_test.transaction;
+DELETE FROM pay_my_buddy_test.users_roles;
+DELETE FROM pay_my_buddy_test.role;
+DELETE FROM pay_my_buddy_test.user_buddy;
+DELETE FROM pay_my_buddy_test.bank_account;
+DELETE FROM pay_my_buddy_test.account;
 INSERT INTO role(role_id, name)
 values
 (1, 'ROLE_USER'),
