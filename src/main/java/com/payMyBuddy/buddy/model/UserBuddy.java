@@ -1,4 +1,3 @@
-
 package com.payMyBuddy.buddy.model;
 
 import java.util.Collection;
@@ -18,6 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -40,6 +40,7 @@ public class UserBuddy {
    */
   @Column(nullable = false,unique =true)
   @NotNull
+  @Size(max = 50, message = "Email must be less than 50 characters")
   private String email;
   
   /**
@@ -52,22 +53,26 @@ public class UserBuddy {
   * user lastName
   */
   @Column(name = "last_name")
+  @Size(max = 25, message = "Last name must be less than 25 characters")
   private String lastName;
   
   /**
    * user firstName
    */
   @Column(name = "first_name")
+  @Size(max = 25, message = "First name must be less than 25 characters")
   private String firstName;
   
   /**
    * user birthdate
    */
+  @Size(max = 12, message = "Birthdate must be less than 12 characters")
   private String birthdate;
   
   /**
    * user address
    */
+  @Size(max = 100, message = "Address must be less than 100 characters")
   private String address;
   
   /**
@@ -78,11 +83,13 @@ public class UserBuddy {
   /**
    * user city
    */
+  @Size(max = 50, message = "City must be less than 50 characters")
   private String city;
   
   /**
    * user phone
    */
+  @Size(max = 12, message = "Phone must be less than 12 characters")
   private String phone;
   
   /**

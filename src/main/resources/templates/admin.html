@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-	>
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,21 +31,21 @@ body {
 </head>
 <body>
 
-
+<!-- Navigation menu -->
 	<nav class="navbar navbar-expand ">
 		<div class="container-fluid">
 			<button class="btndisabled btn btn-success center-block disabled">Pay
 				my buddy</button>
 			<div>
 				<ul class="nav navbar-right">
-					<li class="nav-item"><a class="nav-link active"
-						href="home">Home</a></li>
+					<li class="nav-item"><a class="nav-link active" href="home">Home</a></li>
 					<li class="nav-item"><a class="nav-link" href="transfer">Transfer</a></li>
 					<li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
 					<li class="nav-item"><a class="nav-link" href="contact">Contact</a></li>
-					<li class="nav-item" sec:authorize="isAuthenticated()"><form th:action="@{/logout}"
-							method="post">
-							<input class="nav-link btn btn-primary"  type="submit" value="Log Out" />
+					<li class="nav-item" sec:authorize="isAuthenticated()"><form
+							th:action="@{/logout}" method="post">
+							<input class="nav-link btn btn-primary" type="submit"
+								value="Log Out" />
 						</form></li>
 				</ul>
 			</div>
@@ -58,15 +57,13 @@ body {
 					/</a></li>
 		</ul>
 	</nav>
+<!-- End Navigation menu -->
 
 	<div class="container px-4">
 
 		<div class="row mt-3 mb-1 justify-content-between">
 			<div class="ml-4">
 				<span class="text-left"><h4>Your Admin Account</h4></span>
-			</div>
-			<div class="mr-4">
-				<button class="btn btn-primary">Unsuscribe</button>
 			</div>
 		</div>
 
@@ -76,24 +73,28 @@ body {
 
 					<div class="card-body text-center">
 						Welcome <span sec:authentication="principal.username"> User</span>
-						<br><br>
-						
+						<br>
+						<br>
+
 						<!-- Account Balance -->
 						<h4>Balance :</h4>
-						<div class="card mx-auto" style="width: 18rem;" th:text="${account.balance}">
-							
-						</div><div>€</div><!-- success message -->
-						<div th:if="${param.successPayment}" class = "mt-1">
-							<div class="alert alert-info">You've successfully do transfer !</div>
+						<div class="card mx-auto" style="width: 18rem;"
+							th:text="${account.balance}"></div>
+						<div>€</div>
+						<!-- success message -->
+						<div th:if="${param.successPayment}" class="mt-1">
+							<div class="alert alert-info">You've successfully do
+								transfer !</div>
 						</div>
-						
+
 						<!-- error message -->
-						<div th:if="${param.error}" class = "mt-1">
+						<div th:if="${param.error}" class="mt-1">
 							<div class="alert alert-danger">error during transfer !</div>
 						</div>
 						<!-- error message ammount = 0 -->
-						<div th:if="${param.errorZero}" class = "mt-1">
-							<div class="alert alert-danger">ammount bank transfer = 0 !!!</div>
+						<div th:if="${param.errorZero}" class="mt-1">
+							<div class="alert alert-danger">ammount bank transfer = 0
+								!!!</div>
 						</div>
 
 					</div>
@@ -126,9 +127,7 @@ body {
 										class="list-group-item list-group-item-action  list-group-item-primary active"
 										id="list-home-list" data-toggle="list" href="#list-home"
 										role="tab" aria-controls="home">Pay money with bank
-										account</a>
-										 
-										<a
+										account</a> <a
 										class="list-group-item list-group-item-action list-group-item-primary"
 										id="list-withdraw-list" data-toggle="list"
 										href="#list-withdraw" role="tab" aria-controls="withdraw">Withdraw</a>
@@ -145,20 +144,22 @@ body {
 
 										<p>Please complete amount and pay button or add a bank
 											account :</p>
-										<form class="form-inline" th:action="@{/home}" method="POST" th:object = "${transaction}">
+										<form class="form-inline" th:action="@{/home}" method="POST"
+											th:object="${transaction}">
 											<div class="mr-2">
 												<!--  <select class="form-control " required="required" autofocus="autofocus">
 													<option disabled="disabled">choose a bank Account</option>
 													<option th:value="${bankAccount.holder}" th:text="${bankAccount.holder}"></option>
 												</select>-->
-												<div th:if="${bankAccount == null}">You don't have a bank account, please add a bank account</div>
+												<div th:if="${bankAccount == null}">You don't have a
+													bank account, please add a bank account</div>
 											</div>
 											<div class="mr-2 w-10" th:if="${bankAccount != null}">
-												<label for="amount"></label>
-												 <input 
-													class="form-control " type="text" value="0"
-													id="amount" name="amount" required autofocus="autofocus">
-											</div><div class="mr-1">€</div>
+												<label for="amount"></label> <input class="form-control "
+													type="text" value="0" id="amount" name="amount" required
+													autofocus="autofocus">
+											</div>
+											<div class="mr-1">€</div>
 											<div class="mr-2">
 												<button type="submit" class="btn  btn-block btn-success">Pay</button>
 											</div>
@@ -169,7 +170,7 @@ body {
 													acount</button>
 											</div>
 										</form>
-										
+
 
 
 										<!-- Pop-up add bank details -->
@@ -180,55 +181,63 @@ body {
 														<p>Bank details</p>
 													</div>
 													<div class="modal-body">
-														<form th:action="@{/home/addBankAccount}" method="POST" th:object = "${bankAccountadd}">
+														<form th:action="@{/home/addBankAccount}" method="POST"
+															th:object="${bankAccountadd}">
 															<div class="form-group">
-																<label for="codeBank">Code Bank</label>
-																 <input type="number"
-																	class="form-control" id="codeBank"
-																	aria-describedby="codeBank" placeholder="Code bank" th:field="*{codeBank}" name="codeBank" required autofocus="autofocus">
+																<label for="codeBank">Code Bank</label> <input
+																	type="number" class="form-control" id="codeBank"
+																	aria-describedby="codeBank" placeholder="Code bank"
+																	th:field="*{codeBank}" name="codeBank" required
+																	autofocus="autofocus">
 
 															</div>
 
 															<div class="form-group">
-																<label for="bankCounter">Bank Counter</label> 
-																<input type="number"
-																	class="form-control" id="bankCounter"
+																<label for="bankCounter">Bank Counter</label> <input
+																	type="number" class="form-control" id="bankCounter"
 																	aria-describedby="bankCounter"
-																	placeholder="bankCounter" th:field="*{bankCounterCode}" name="bankCounterCode" required autofocus="autofocus">
+																	placeholder="bankCounter" th:field="*{bankCounterCode}"
+																	name="bankCounterCode" required autofocus="autofocus">
 
 															</div>
-															
+
 															<div class="form-group">
-																<label for="accountNumber">Account Number</label>
-																 <input type="text"
-																	class="form-control" id="accountNumber"
-																	placeholder="accountNumber" th:field="*{accountNumber}" name="accountNumber" required autofocus="autofocus">
+																<label for="accountNumber">Account Number</label> <input
+																	type="text" class="form-control" id="accountNumber"
+																	placeholder="accountNumber" th:field="*{accountNumber}"
+																	name="accountNumber" required autofocus="autofocus">
 															</div>
-															
+
 															<div class="form-group">
-																<label for="ribKey">Rib Key</label>
-																 <input type="number"
-																	class="form-control" id="ribKey" placeholder="ribKey" th:field="*{ribKey}" name="ribKey" required autofocus="autofocus">
+																<label for="ribKey">Rib Key</label> <input type="number"
+																	class="form-control" id="ribKey" placeholder="ribKey"
+																	th:field="*{ribKey}" name="ribKey" required
+																	autofocus="autofocus">
 															</div>
-															
+
 															<div class="form-group">
-																<label for="domiciliation">Domiciliation</label>
-																 <input type="text"
-																	class="form-control" id="domiciliation"
-																	placeholder="domiciliation" th:field="*{domiciliation}" name="domiciliation" required autofocus="autofocus">
+																<label for="domiciliation">Domiciliation</label> <input
+																	type="text" class="form-control" id="domiciliation"
+																	placeholder="domiciliation" th:field="*{domiciliation}"
+																	name="domiciliation" required autofocus="autofocus">
 															</div>
 															<div class="form-group">
-																<label for="iban">Iban</label>
-																 <input type="text"
-																	class="form-control" id="iban" placeholder="iban" th:field="*{iban}" name="iban" required autofocus="autofocus">
+																<label for="iban">Iban</label> <input type="text"
+																	class="form-control" id="iban" placeholder="iban"
+																	th:field="*{iban}" name="iban" required
+																	autofocus="autofocus">
 															</div>
 															<div class="form-group">
 																<label for="bic">Bic</label> <input type="text"
-																	class="form-control" id="bic" placeholder="bic" th:field="*{bic}" name="bic" required autofocus="autofocus">
+																	class="form-control" id="bic" placeholder="bic"
+																	th:field="*{bic}" name="bic" required
+																	autofocus="autofocus">
 															</div>
 															<div class="form-group">
 																<label for="holder">Holder</label> <input type="text"
-																	class="form-control" id="holder" placeholder="holder" th:field="*{holder}" name="holder" required autofocus="autofocus">
+																	class="form-control" id="holder" placeholder="holder"
+																	th:field="*{holder}" name="holder" required
+																	autofocus="autofocus">
 															</div>
 
 															<p></p>
@@ -255,9 +264,10 @@ body {
 											bank account :</p>
 										<form class="form-inline">
 											<div class="mr-2 w-10">
-											<div th:if="${bankAccount == null}">You don't have a bank account, please add a bank account</div>
+												<div th:if="${bankAccount == null}">You don't have a
+													bank account, please add a bank account</div>
 											</div>
-											
+
 											<div class="mr-2 w-10" th:if="${bankAccount != null}">
 												<label for="example-number-input"></label> <input
 													class="form-control " type="number" value="0"
@@ -282,55 +292,63 @@ body {
 														<p>Bank details</p>
 													</div>
 													<div class="modal-body">
-														<form th:action="@{/home/addBankAccount}" method="POST" th:object = "${bankAccountadd}">
+														<form th:action="@{/home/addBankAccount}" method="POST"
+															th:object="${bankAccountadd}">
 															<div class="form-group">
-																<label for="codeBank">Code Bank</label>
-																 <input type="number"
-																	class="form-control" id="codeBank"
-																	aria-describedby="codeBank" placeholder="Code bank" th:field="*{codeBank}" name="codeBank" required autofocus="autofocus">
+																<label for="codeBank">Code Bank</label> <input
+																	type="number" class="form-control" id="codeBank"
+																	aria-describedby="codeBank" placeholder="Code bank"
+																	th:field="*{codeBank}" name="codeBank" required
+																	autofocus="autofocus">
 
 															</div>
 
 															<div class="form-group">
-																<label for="bankCounter">Bank Counter</label> 
-																<input type="number"
-																	class="form-control" id="bankCounter"
+																<label for="bankCounter">Bank Counter</label> <input
+																	type="number" class="form-control" id="bankCounter"
 																	aria-describedby="bankCounter"
-																	placeholder="bankCounter" th:field="*{bankCounterCode}" name="bankCounterCode" required autofocus="autofocus">
+																	placeholder="bankCounter" th:field="*{bankCounterCode}"
+																	name="bankCounterCode" required autofocus="autofocus">
 
 															</div>
-															
+
 															<div class="form-group">
-																<label for="accountNumber">Account Number</label>
-																 <input type="text"
-																	class="form-control" id="accountNumber"
-																	placeholder="accountNumber" th:field="*{accountNumber}" name="accountNumber" required autofocus="autofocus">
+																<label for="accountNumber">Account Number</label> <input
+																	type="text" class="form-control" id="accountNumber"
+																	placeholder="accountNumber" th:field="*{accountNumber}"
+																	name="accountNumber" required autofocus="autofocus">
 															</div>
-															
+
 															<div class="form-group">
-																<label for="ribKey">Rib Key</label>
-																 <input type="number"
-																	class="form-control" id="ribKey" placeholder="ribKey" th:field="*{ribKey}" name="ribKey" required autofocus="autofocus">
+																<label for="ribKey">Rib Key</label> <input type="number"
+																	class="form-control" id="ribKey" placeholder="ribKey"
+																	th:field="*{ribKey}" name="ribKey" required
+																	autofocus="autofocus">
 															</div>
-															
+
 															<div class="form-group">
-																<label for="domiciliation">Domiciliation</label>
-																 <input type="text"
-																	class="form-control" id="domiciliation"
-																	placeholder="domiciliation" th:field="*{domiciliation}" name="domiciliation" required autofocus="autofocus">
+																<label for="domiciliation">Domiciliation</label> <input
+																	type="text" class="form-control" id="domiciliation"
+																	placeholder="domiciliation" th:field="*{domiciliation}"
+																	name="domiciliation" required autofocus="autofocus">
 															</div>
 															<div class="form-group">
-																<label for="iban">Iban</label>
-																 <input type="text"
-																	class="form-control" id="iban" placeholder="iban" th:field="*{iban}" name="iban" required autofocus="autofocus">
+																<label for="iban">Iban</label> <input type="text"
+																	class="form-control" id="iban" placeholder="iban"
+																	th:field="*{iban}" name="iban" required
+																	autofocus="autofocus">
 															</div>
 															<div class="form-group">
 																<label for="bic">Bic</label> <input type="text"
-																	class="form-control" id="bic" placeholder="bic" th:field="*{bic}" name="bic" required autofocus="autofocus">
+																	class="form-control" id="bic" placeholder="bic"
+																	th:field="*{bic}" name="bic" required
+																	autofocus="autofocus">
 															</div>
 															<div class="form-group">
 																<label for="holder">Holder</label> <input type="text"
-																	class="form-control" id="holder" placeholder="holder" th:field="*{holder}" name="holder" required autofocus="autofocus">
+																	class="form-control" id="holder" placeholder="holder"
+																	th:field="*{holder}" name="holder" required
+																	autofocus="autofocus">
 															</div>
 
 															<p></p>

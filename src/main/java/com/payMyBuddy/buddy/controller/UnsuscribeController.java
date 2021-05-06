@@ -23,12 +23,22 @@ public class UnsuscribeController {
   @Autowired
   UserBuddyServiceI userBuddyServiceI;
 
+  /**
+   * Unsuscribe page
+   * @param model
+   * @return
+   */
   @GetMapping
   public String unsuscribe(Model model) {
     
     return "unsuscribe";
   }
   
+  /**
+   * Form to unsuscribe
+   * @param userDto
+   * @return
+   */
   @PostMapping
   public String transfer(@ModelAttribute("user") UserDto userDto) {
 
@@ -37,13 +47,10 @@ public class UnsuscribeController {
     
     userDto.setEmailConfirm(username);
     
-    log.debug("user" + userDto);
     if (!userDto.getEmail().equalsIgnoreCase(userDto.getEmailConfirm())) {
       return "redirect:/unsuscribe?error";
   }
-    
       userBuddyServiceI.unsuscribe(userDto);
-    
       return "redirect:/login?unsuscribe";
     }
 }

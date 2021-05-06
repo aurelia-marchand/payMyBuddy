@@ -10,7 +10,5 @@ public class RoleServiceImpl implements RoleServiceI{
 
   @Autowired
   RoleRepository roleRepository;
-  
- 
 
 }

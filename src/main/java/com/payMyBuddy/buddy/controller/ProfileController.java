@@ -29,13 +29,16 @@ public class ProfileController implements WebMvcConfigurer{
   public UserProfileDto userProfilDto() {
     return new UserProfileDto();
   }
-  
+  /**
+   * Profile page, allows to view profile
+   * @param model
+   * @return
+   */
   @GetMapping
   public String profile(Model model) {
     
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
-
     UserBuddy user = userBuddyServiceI.findOne(username);
     
     model.addAttribute("user", user);
@@ -43,6 +46,12 @@ public class ProfileController implements WebMvcConfigurer{
     return "profile";
   }
   
+  /**
+   * Form Profile page to update profile
+   * @param userDto
+   * @param bindingResult
+   * @return
+   */
   @PostMapping("/update")
   public String transfer(@Valid @ModelAttribute("user") UserProfileDto userDto, BindingResult bindingResult) {
 

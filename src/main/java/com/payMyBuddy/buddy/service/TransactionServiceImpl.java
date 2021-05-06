@@ -16,10 +16,10 @@ import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.repository.AccountRepository;
 import com.payMyBuddy.buddy.repository.TransactionRepository;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Log4j2
+@Slf4j
 public class TransactionServiceImpl implements TransactionServiceI {
 
   @Autowired
@@ -99,10 +99,13 @@ public class TransactionServiceImpl implements TransactionServiceI {
       transactionRepository.save(transactionPayment);
 
       Account accountToUpdate = accountRepository.getOne(account.getAccountId());
+      // for withdraw
       if (transactionPayment.getDescription().equalsIgnoreCase("withdraw")) {
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getAmount()));
+        // for payment
       } else if (transactionPayment.getDescription().equalsIgnoreCase("payment")) {
         accountToUpdate.setBalance(account.getBalance().add(transactionPayment.getAmount()));
+        // for transfer between account user
       } else {
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getAmount()));
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getFee()));
@@ -111,14 +114,11 @@ public class TransactionServiceImpl implements TransactionServiceI {
         accountBeneficiary.setBalance(accountB.getBalance().add(transactionPayment.getAmount()));
         accountRepository.save(accountBeneficiary);
       }
-
       accountRepository.save(accountToUpdate);
-
       return "success";
     } else {
       return "error";
     }
-
   }
 
   @Override

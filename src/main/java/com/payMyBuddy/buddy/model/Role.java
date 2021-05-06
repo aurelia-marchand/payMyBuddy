@@ -12,24 +12,23 @@ import lombok.Data;
 @Entity
 public class Role {
   
-  public Role(String name) {
-    super();
-    this.name = name;
-  }
-  
-
-  public Role() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
-
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "role_id")
   private Long id;
   
   private String name;
+
+  public Role(String name) {
+    super();
+    this.name = name;
+  }
+  
+  public Role() {
+    super();
+  }
+
+
   
 
 }

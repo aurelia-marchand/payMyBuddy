@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.payMyBuddy.buddy.dto.BankAccountDto;
 import com.payMyBuddy.buddy.dto.TransactionDto;
-import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.model.Account;
 import com.payMyBuddy.buddy.model.BankAccount;
 import com.payMyBuddy.buddy.model.Role;
@@ -26,10 +25,10 @@ import com.payMyBuddy.buddy.service.BankAccountServiceI;
 import com.payMyBuddy.buddy.service.TransactionServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@Log4j2
+@Slf4j
 @RequestMapping("/home")
 @Validated
 public class HomeController {
@@ -56,32 +55,42 @@ public class HomeController {
     return new TransactionDto();
   }
 
+  /**
+   * Home page, diplay balance account, allows you to make payments and
+   * withdrawals, add bank details, as well as access to all the pages of the app
+   * 
+   * @param model
+   * @return home page or admin page according to role
+   */
   @GetMapping
   public String home(Model model) {
-    log.debug("avant : " + model);
+    log.info("Request get /home called");
 
+    // Get the user authenticate, need to find this account, info....
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
 
     UserBuddy user = userBuddyServiceI.findOne(username);
-log.debug("user : " + user);
     Account account = accountServiceI.findByUserAccountId(user);
-    log.debug("account : " + account);
-
     BankAccount bankAccount = user.getBankAccount();
+
+    // Serve user information to view
     model.addAttribute("account", account);
     model.addAttribute("bankAccount", bankAccount);
-    log.debug("model : " + model);
 
+    // Return home page or admin page according to role
     Collection<Role> roles = user.getRoles();
-    log.debug("roles : " + roles);
-
     if (roles.toString().contains("ROLE_ADMIN")) {
       return "admin";
     }
     return "home";
   }
 
+  /**
+   * Form method post for transfer, payment or withdraw
+   * @param transactionDto
+   * @return
+   */
   @PostMapping
   public String transfer(@ModelAttribute("transaction") TransactionDto transactionDto) {
 
@@ -90,13 +99,8 @@ log.debug("user : " + user);
     String username = authentication.getName();
     UserBuddy user = userBuddyServiceI.findOne(username);
     Account account = accountServiceI.findByUserAccountId(user);
-    
-    log.debug("transactionDto : " + transactionDto);
-    log.debug("username : " + username);
-    log.debug("user: " + user);
-    log.debug("account: " + account);
 
-
+    //Verify amount > 0
     if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
       transactionDto.setSenderId(account);
       String reponse = transactionServiceI.save(transactionDto);
@@ -110,34 +114,25 @@ log.debug("user : " + user);
     } else {
       return "redirect:/home?error";
     }
-    
+
   }
 
+  /**
+   * Form method post to add bank account
+   * @param bankAccountDto
+   * @return
+   */
   @PostMapping("/addBankAccount")
   public String addBankAccount(@ModelAttribute("bankAccountadd") BankAccountDto bankAccountDto) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
     bankAccountDto.setEmail(username);
-    
+
     bankAccountServiceI.save(bankAccountDto);
 
     return "redirect:/home?successAddBankAccount";
 
   }
-  
-  @PostMapping("/unsuscribe")
-  public String unsuscribe(@ModelAttribute("userS") UserDto userDto) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
-    String username = authentication.getName();
-    
-    if(username == userDto.getEmail()) {
-      return "redirect:/logout";
-    }
-    
-
-    return "redirect:/home";
-
-  }
 }

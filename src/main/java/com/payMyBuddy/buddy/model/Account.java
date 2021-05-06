@@ -1,7 +1,6 @@
 
 package com.payMyBuddy.buddy.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
@@ -20,7 +19,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "account")
-public class Account implements Serializable{
+public class Account{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,10 +24,10 @@ import com.payMyBuddy.buddy.service.ConnectionServiceI;
 import com.payMyBuddy.buddy.service.TransactionServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@Log4j2
+@Slf4j
 @RequestMapping("/transfer")
 public class TransferController {
 
@@ -48,34 +48,36 @@ public class TransferController {
     return new TransactionDto();
   }
 
+  /**
+   * Transfer page, display form transfer, connection and all transfers
+   * @param model
+   * @return
+   */
   @GetMapping
   public String transfer(Model model) {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
-    log.debug("username" + username);
     UserBuddy user = userBuddyServiceI.findOne(username);
-    log.debug("user" + user);
     Account account = accountServiceI.findByUserAccountId(user);
-    log.debug("account" + account);
 
+    //To display transfers and connections
     Iterable<Transaction> listTransaction = null;
-
     listTransaction = transactionServiceI.findAllBySenderIdAndType(account, Type.USER_TO_USER);
-    log.debug("listTransaction" + listTransaction);
     Set<UserBuddy> contacts = user.getContacts();
-    log.debug("contacts" + contacts);
-
     model.addAttribute("transactions", listTransaction);
     model.addAttribute("contacts", contacts);
 
     return "transfer";
-
   }
 
+  /**
+   * Form to add connection
+   * @param userConnectionDto
+   * @return
+   */
   @PostMapping("/connection")
   public String addConnection(@ModelAttribute("user") UserConnectionDto userConnectionDto) {
-
     if (userBuddyServiceI.existsUserBuddyByEmail(userConnectionDto.getEmail())) {
       connectionServiceI.add(userConnectionDto);
       return "redirect:/transfer?successAddConnection";
@@ -84,6 +86,11 @@ public class TransferController {
     }
   }
 
+  /**
+   * Form transfer
+   * @param transactionDto
+   * @return
+   */
   @PostMapping("/transfer")
   public String transfer(@ModelAttribute("transaction") TransactionDto transactionDto) {
 

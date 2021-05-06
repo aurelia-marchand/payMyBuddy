@@ -30,8 +30,7 @@ body {
 </style>
 </head>
 <body>
-
-
+	<!-- Navigation menu -->
 	<nav class="navbar navbar-expand ">
 		<div class="container-fluid">
 			<button class="btndisabled btn btn-success center-block disabled">Pay
@@ -57,19 +56,20 @@ body {
 					/</a></li>
 		</ul>
 	</nav>
-
+	<!-- End Navigation menu -->
 	<div class="container px-4">
 
 		<div class="row mt-3 mb-1 justify-content-between">
 			<div class="ml-4">
 				<span class="text-left"><h4>Your Account</h4></span>
 			</div>
-			<div class="mr-4"><form
-							th:action="@{/unsuscribe}" method="get">
-				<button class="btn btn-primary " >Unsuscribe</button></form>
+			<div class="mr-4">
+				<form th:action="@{/unsuscribe}" method="get">
+					<button class="btn btn-primary ">Unsuscribe</button>
+				</form>
 			</div>
 		</div>
-
+		<!-- Banlance Account -->
 		<div class="row justify-content-center">
 			<div class=" col-md-12 col-md-offset-3 text-center">
 				<div class="card bg-light mb-3 text-center">
@@ -107,12 +107,11 @@ body {
 				</div>
 			</div>
 		</div>
+		<!-- End Balance account -->
 	</div>
 
+	<!-- Payment and withdraw -  popup bankAccount to the end-->
 	<div class="container px-4">
-
-
-
 		<div class="row mt-3 mb-1 justify-content-between">
 			<div class="ml-4">
 				<span class="text-left"><h4>Pay and Withdraw</h4></span>
@@ -126,6 +125,7 @@ body {
 					<div class="card-body text-center">
 
 						<div class="row">
+							<!-- option payment or withdraw -->
 							<div class="col-3">
 								<div class="list-group" id="list-tab" role="tablist">
 									<p>Choose an option :</p>
@@ -140,6 +140,7 @@ body {
 
 								</div>
 							</div>
+							<!-- End option payment or withdraw -->
 							<div class="col-9 ">
 								<div class="tab-content row justify-content-between"
 									id="nav-tabContent">
@@ -153,21 +154,21 @@ body {
 										<form class="form-inline" th:action="@{/home}" method="POST"
 											th:object="${transaction}">
 											<div class="mr-2">
-												
+
 												<div th:if="${bankAccount == null}">You don't have a
 													bank account, please add a bank account</div>
 											</div>
 											<div class="mr-2 w-10" th:if="${bankAccount != null}">
 												<label for="amount"></label> <input class="form-control "
-													type="number" step = "any" value="0" id="amount" name="amount" required
-													autofocus="autofocus">
+													type="number" step="any" value="0" id="amount"
+													name="amount" required autofocus="autofocus">
 
 
-												<!-- essai variable à envoyer -->
+												<!-- value to send with the form -->
 												<label for="description"></label> <input
 													class="form-control d-none" type="text" value="payment"
 													id="description" name="description">
-												<!-- Fin de l'essai -->
+												<!-- end send value -->
 
 											</div>
 											<div class="mr-1">€</div>
@@ -259,8 +260,7 @@ body {
 																<label for="bic">Bic</label> <input type="text"
 																	maxlength="11" pattern=".{8,}" class="form-control"
 																	id="bic" placeholder="bic" th:field="*{bic}" name="bic"
-																	required autofocus="autofocus">
-																	<small
+																	required autofocus="autofocus"> <small
 																	id="bicHelpBlock" class="form-text text-muted">
 																	Your bic must be 8 or 11 characters long, contain
 																	letters and numbers </small>
@@ -286,8 +286,9 @@ body {
 												</div>
 											</div>
 										</div>
-
+										<!-- End popup bankDetails -->
 									</div>
+									<!-- End bank transfer -->
 
 									<!-- onglet withdraw -->
 									<div class="tab-pane fade" id="list-withdraw" role="tabpanel"
@@ -303,7 +304,8 @@ body {
 
 											<div class="mr-2 w-10" th:if="${bankAccount != null}">
 												<label for="amount"></label> <input class="form-control "
-													type="number" step = "any" value="0" id="amount" name="amount">
+													type="number" step="any" value="0" id="amount"
+													name="amount">
 
 												<!-- essai variable à envoyer -->
 												<label for="description"></label> <input
@@ -399,8 +401,7 @@ body {
 																<label for="bic">Bic</label> <input type="text"
 																	maxlength="11" pattern=".{8,}" class="form-control"
 																	id="bic" placeholder="bic" th:field="*{bic}" name="bic"
-																	required autofocus="autofocus">
-																	<small
+																	required autofocus="autofocus"> <small
 																	id="bicHelpBlock" class="form-text text-muted">
 																	Your bic must be 8 or 11 characters long, contain
 																	letters and numbers </small>
@@ -424,11 +425,12 @@ body {
 													</div>
 												</div>
 											</div>
+											<!-- End popup bankdetails2 -->
 										</div>
-										
+
 
 									</div>
-
+									<!--  End withdraw -->
 								</div>
 							</div>
 						</div>

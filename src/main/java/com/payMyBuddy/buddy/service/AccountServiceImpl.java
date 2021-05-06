@@ -9,10 +9,10 @@ import com.payMyBuddy.buddy.model.Account;
 import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.repository.AccountRepository;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Log4j2
+@Slf4j
 public class AccountServiceImpl implements AccountServiceI{
   
   @Autowired
@@ -20,26 +20,16 @@ public class AccountServiceImpl implements AccountServiceI{
 
   @Override
   public Account findByUserAccountId(UserBuddy user) {
-    
     return accountRepository.findByUserBuddy(user);
   }
 
   @Override
   public String save(UserBuddy user) {
-    log.debug("user" + user);
+    // Create an account when new user suscribe
     Account account = new Account();
     account.setBalance(new BigDecimal("0"));
-
     account.setUserBuddy(user);
-    log.debug("account" + account);
-
-    
     accountRepository.save(account);
-
-    
     return "success";
   }
-
-  
-
 }

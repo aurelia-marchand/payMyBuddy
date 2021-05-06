@@ -29,9 +29,12 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-  
-  
-
+ 
+  /**
+   * Service for registration new user
+   * @param userRegistrationDto
+   * @return userBuddy
+   */
   @Override
   @Transactional
   public UserBuddy save(UserRegistrationDto userRegistrationDto) {
@@ -44,7 +47,7 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
   }
   
   /**
-   * Set Email and encode password before save in database
+   * Set Email and encode password before save in database and set the role
    * @param userRegistrationDto
    * @return user to save
    */
@@ -53,12 +56,12 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     
     user.setEmail(userRegistrationDto.getEmail());
     user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
+    // TODO this to add an admin account, have to remove after create
     if(userRegistrationDto.getEmail().equalsIgnoreCase("admin4@paymybuddy.com")) {
       user.setRoles(Arrays.asList(new Role("ROLE_ADMIN")));
     }else {
       user.setRoles(Arrays.asList(new Role("ROLE_USER")));
     }
-    
     return user;
   }
 
@@ -72,29 +75,25 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     return userBuddyRepository.findByemail(email);
   }
 
-  
-
   @Override
   public boolean existsUserBuddyByEmail(String email) {
-
     return userBuddyRepository.existsUserBuddyByEmail(email);
   }
 
+  /**
+   * To update user profile
+   * @param userDto
+   */
   @Override
   public UserBuddy save(UserProfileDto userDto) {
     UserBuddy user = new UserBuddy();
   
     user = userBuddyRepository.findByemail(userDto.getEmail());
-    
-    log.debug("userDto : " + userDto);
-    log.debug("user : " + user);
-
-    
+    // get the user with getOne() method fr update in database
     UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
-    
     log.debug("userToUpdate : " + userToUpdate);
 
-    
+    // set the user profile
     userToUpdate.setLastName(userDto.getLastName());
     userToUpdate.setFirstName(userDto.getFirstName());
     userToUpdate.setBirthdate(userDto.getBirthdate());
@@ -108,15 +107,20 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     return userBuddy;
   }
 
+  /**
+   * Service for unsuscribe user and set inactive profile
+   */
   @Override
   public void unsuscribe(UserDto userDto) {
     UserBuddy user = new UserBuddy();
     
     user = userBuddyRepository.findByemail(userDto.getEmail());
-    
     UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
+    // set inactive
     userToUpdate.setActive(false);
     String email = userToUpdate.getEmail();
+    
+    // the user can re suscribe with the same email, but not sure to let this
     userToUpdate.setEmail("unsuscribe"+email);
     UserBuddy userBuddy =  userBuddyRepository.save(userToUpdate);
     log.debug("user inactive: " + userBuddy);

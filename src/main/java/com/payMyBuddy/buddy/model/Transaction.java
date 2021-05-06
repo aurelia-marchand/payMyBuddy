@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -34,6 +35,7 @@ public class Transaction {
 
   private BigDecimal fee;
 
+  @Size(max = 100, message = "Message must be less than 100 characters")
   private String description;
   
   @Enumerated(EnumType.STRING)

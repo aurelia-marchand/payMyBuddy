@@ -80,9 +80,11 @@ body {
 						<div>
 							
 							<div>
+							<!-- Form unsuscribe -->
 								<form th:action="@{/unsuscribe}" method="post" th:object="${user}">
 
 									<div class="form-group">
+									<!-- Email user confirm -->
 										<label for="email">Confirm your email</label> <input
 											type="email" class="form-control" placeholder="email"
 											name="email" required autofocus="autofocus">

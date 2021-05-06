@@ -27,20 +27,20 @@ body {
 </head>
 <body>
 
-<nav class="navbar navbar-expand ">
+	<nav class="navbar navbar-expand ">
 		<div class="container-fluid">
 			<button class="btndisabled btn btn-success center-block disabled">Pay
 				my buddy</button>
 			<div>
 				<ul class="nav navbar-right">
-					<li class="nav-item"><a class="nav-link"
-						href="home">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="home">Home</a></li>
 					<li class="nav-item"><a class="nav-link" href="transfer">Transfer</a></li>
 					<li class="nav-item"><a class="nav-link active" href="profile">Profile</a></li>
 					<li class="nav-item"><a class="nav-link" href="contact">Contact</a></li>
-					<li class="nav-item" sec:authorize="isAuthenticated()"><form th:action="@{/logout}"
-							method="post">
-							<input class="nav-link btn btn-primary"  type="submit" value="Log Out" />
+					<li class="nav-item" sec:authorize="isAuthenticated()"><form
+							th:action="@{/logout}" method="post">
+							<input class="nav-link btn btn-primary" type="submit"
+								value="Log Out" />
 						</form></li>
 				</ul>
 			</div>
@@ -53,17 +53,18 @@ body {
 		</ul>
 	</nav>
 	<div class="container px-4">
-	<div class="row mt-3 mb-1 justify-content-between">
+		<div class="row mt-3 mb-1 justify-content-between">
 			<div class="ml-4">
 				<span class="text-left"><h4>Your Profile</h4></span>
 			</div>
-			<div class="mr-4"><form
-							th:action="@{/unsuscribe}" method="get">
-				<button class="btn btn-primary " >Unsuscribe</button></form>
+			<div class="mr-4">
+				<form th:action="@{/unsuscribe}" method="get">
+					<button class="btn btn-primary ">Unsuscribe</button>
+				</form>
 			</div>
 		</div>
 
-	
+
 		<div class="row justify-content-center">
 			<div class=" col-md-12 col-md-offset-3">
 
@@ -74,83 +75,91 @@ body {
 							my buddy</button>
 
 						<!-- Profile form -->
-						
-						<form th:action="@{/profile/update}"  method="POST" th:object = "${user}">
-						
-						<!-- success message -->
-						<div th:if="${param.successUpdate}" class = "mt-1">
-							<div class="alert alert-info">You've successfully update your profile !</div>
-						</div>
-						
-						<!-- User Email/username -->
-						
-												<label for="email"></label> <input
-													class="form-control d-none" type="text" 
-													id="email" name="email" th:field="*{email}">
-												<!-- Fin de l'essai -->
-						
-						
+
+						<form th:action="@{/profile/update}" method="POST"
+							th:object="${user}">
+
+							<!-- success message -->
+							<div th:if="${param.successUpdate}" class="mt-1">
+								<div class="alert alert-info">You've successfully update
+									your profile !</div>
+							</div>
+
+							<!-- User Email/username -->
+
+							<label for="email"></label> <input class="form-control d-none"
+								type="text" id="email" name="email" th:field="*{email}">
+							<!-- Fin de l'essai -->
+
+
 							<!-- fin Email/username -->
-							
+
 							<div class="form-group">
-								<label for="lastName">Last Name :</label> <input type="text" maxlength="25"
-									class="form-control" id="lastName" name="lastName"
-									placeholder="LastName" th:field="*{LastName}" required autofocus="autofocus"/>
-									
+								<label for="lastName">Last Name :</label> <input type="text"
+									maxlength="25" class="form-control" id="lastName"
+									name="lastName" placeholder="LastName" th:field="*{LastName}"
+									required autofocus="autofocus" />
+
 							</div>
-							
+
 							<!-- User firstName -->
-							
+
 							<div class="form-group">
-								<label for="firstName">First Name :</label> <input type="text" maxlength="25"
-									class="form-control" id="firstName" name="firstName"
-									placeholder="firstName" th:field="*{firstName}" required autofocus="autofocus"/>
+								<label for="firstName">First Name :</label> <input type="text"
+									maxlength="25" class="form-control" id="firstName"
+									name="firstName" placeholder="firstName"
+									th:field="*{firstName}" required autofocus="autofocus" />
 							</div>
-							
+
 							<!-- User birthdate -->
 							<div class="form-group">
 								<label for="birthdate">Birthdate :</label> <input type="date"
 									class="form-control" id="birthdate" name="birthdate"
-									placeholder="birthdate" th:field="*{birthdate}" required autofocus="autofocus"/>
+									placeholder="birthdate" th:field="*{birthdate}" required
+									autofocus="autofocus" />
 							</div>
-							
+
 							<!-- User address -->
 							<div class="form-group">
 								<label for="address">Address :</label> <input type="text"
-									class="form-control" id="address" name="address" maxlength="100"
-									placeholder="address" th:field="*{address}" required autofocus="autofocus"/>
+									class="form-control" id="address" name="address"
+									maxlength="100" placeholder="address" th:field="*{address}"
+									required autofocus="autofocus" />
 							</div>
-							
+
 							<!-- User zip -->
 							<div class="form-group">
 								<label for="zip">Zip :</label> <input type="tel" maxlength="5"
-									class="form-control" id="zip" name="zip"
-									placeholder="zip" th:field="*{zip}" required autofocus="autofocus"/>
-									<p th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}" class="alert alert-danger">Zip Error</p>
+									class="form-control" id="zip" name="zip" placeholder="zip"
+									th:field="*{zip}" required autofocus="autofocus" />
+								<p th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"
+									class="alert alert-danger">Zip Error</p>
 							</div>
-							
-							
+
+
 							<!-- User city -->
 							<div class="form-group">
-								<label for="city">City :</label> <input type="text" maxlength="50"
-									class="form-control" id="city" name="city"
-									placeholder="city" th:field="*{city}" required autofocus="autofocus"/>
+								<label for="city">City :</label> <input type="text"
+									maxlength="50" class="form-control" id="city" name="city"
+									placeholder="city" th:field="*{city}" required
+									autofocus="autofocus" />
 							</div>
-							
+
 							<!-- User phone -->
 							<div class="form-group">
-								<label for="phone">Phone :</label> <input type="tel" maxlength="10"
-									class="form-control" id="phone" name="phone"
-									placeholder="phone" th:field="*{phone}" required autofocus="autofocus"/>
+								<label for="phone">Phone :</label> <input type="tel"
+									maxlength="10" class="form-control" id="phone" name="phone"
+									placeholder="phone" th:field="*{phone}" required
+									autofocus="autofocus" />
 							</div>
-						
+
 
 							<p></p>
-							
+
 							<!-- Submit btn -->
-	
+
 							<button type="submit" class="btn btn-primary">Update</button>
-							
+
 						</form>
 
 					</div>

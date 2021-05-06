@@ -11,11 +11,11 @@ import com.payMyBuddy.buddy.dto.UserRegistrationDto;
 import com.payMyBuddy.buddy.service.RoleServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/suscribe")
-@Log4j2
+@Slf4j
 public class SuscribeController {
 
   @Autowired
@@ -29,24 +29,30 @@ public class SuscribeController {
     return new UserRegistrationDto();
   }
 
+  /**
+   * Suscribe Page
+   * @return
+   */
   @GetMapping
   public String showRegistrationForm() {
     return "suscribe";
   }
 
+  /**
+   * Form suscribe
+   * @param userRegistrationDto
+   * @return
+   */
   @PostMapping
   public String registerUserAccount(
       @ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
 
+    //Verify if user already exist
     if (userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())) {
-      log.debug("true : " + userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail()));
       return "redirect:/suscribe?error";
     }
      else {
-       log.debug("false : " + userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail()));
-
       userBuddyServiceI.save(userRegistrationDto);
- 
       return "redirect:/suscribe?successRegistration";
     }
 

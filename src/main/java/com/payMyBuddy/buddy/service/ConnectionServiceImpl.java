@@ -17,6 +17,9 @@ public class ConnectionServiceImpl implements ConnectionServiceI{
   @Autowired
   UserBuddyRepository userBuddyRepository;
 
+  /**
+   * To add contact to userBuddy account
+   */
   @Override
   public void add(UserConnectionDto userConnectionDto) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();  
