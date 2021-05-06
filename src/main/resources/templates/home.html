@@ -93,14 +93,10 @@ body {
 						<div th:if="${param.errorNotEnoughMoney}" class="mt-1">
 							<div class="alert alert-danger">not enough money !</div>
 						</div>
-						<!-- error message -->
-						<div th:if="${param.error}" class="mt-1">
-							<div class="alert alert-danger">error during transfer !</div>
-						</div>
 						<!-- error message ammount = 0 -->
 						<div th:if="${param.errorZero}" class="mt-1">
-							<div class="alert alert-danger">ammount bank transfer = 0
-								!!!</div>
+							<div class="alert alert-danger">ammount bank transfer = 0,
+								you must enter a positive amount !!!</div>
 						</div>
 
 					</div>
@@ -307,11 +303,11 @@ body {
 													type="number" step="any" value="0" id="amount"
 													name="amount">
 
-												<!-- essai variable à envoyer -->
+												<!-- Send value -->
 												<label for="description"></label> <input
 													class="form-control d-none" type="text" value="withdraw"
 													id="description" name="description">
-												<!-- Fin de l'essai -->
+												<!-- End send value -->
 
 											</div>
 											<div class="mr-1">€</div>

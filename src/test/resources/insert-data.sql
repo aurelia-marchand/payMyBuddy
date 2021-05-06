@@ -12,13 +12,13 @@ values
 (5, 20056, 2000, '12345j25', 32, 'banque postale, lyon', '2228222555522222', 'psttfr58520', 'aurelia theret');
 
 
-INSERT INTO user_buddy(user_id, email, password, first_name, last_name, birthdate, address, zip, city, phone, bank_account_id)
+INSERT INTO user_buddy(user_id, email, password, first_name, last_name, birthdate, address, zip, city, phone, bank_account_id, active)
 VALUES
-(1, 'aur@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'aurelia', 'marchand', '1984-04-13', 'rue de la plaine', 95420, 'magny',  '0766665544', (SELECT bank_account_id FROM bank_account WHERE holder = 'aurelia marchand')),
-(2, 'brice@gmail.com', '1234', 'brice', 'theret', '1979-12-29', 'allee des bois', 95420, 'magny', '0658547858', (SELECT bank_account_id FROM bank_account WHERE holder = 'brice theret')),
-(3, 'louis@gmail.com', '1111', 'louis', 'dupuis', '1986-09-29', 'avenue de la paix', 95420, 'magny', '', (SELECT bank_account_id FROM bank_account WHERE holder = 'louis dupuis')),
-(4, 'emmy@gmail.com', 'aaaa', 'emmy', 'dupont', '1963-07-20', 'chemin du val', 95420, 'magny', '', (SELECT bank_account_id FROM bank_account WHERE holder = 'emmy dupont')),
-(5, 'admin@paymybuddy.com', 'admin1', 'aurelia', 'theret', '1984-04-13', 'rue de la plaine', 95420, 'magny', '0766665544', (SELECT bank_account_id FROM bank_account WHERE holder = 'aurelia theret'));
+(1, 'aur@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'aurelia', 'marchand', '1984-04-13', 'rue de la plaine', 95420, 'magny',  '0766665544', (SELECT bank_account_id FROM bank_account WHERE holder = 'aurelia marchand'),1),
+(2, 'brice@gmail.com', '1234', 'brice', 'theret', '1979-12-29', 'allee des bois', 95420, 'magny', '0658547858', (SELECT bank_account_id FROM bank_account WHERE holder = 'brice theret'),1),
+(3, 'louis@gmail.com', '1111', 'louis', 'dupuis', '1986-09-29', 'avenue de la paix', 95420, 'magny', '', (SELECT bank_account_id FROM bank_account WHERE holder = 'louis dupuis'),1),
+(4, 'emmy@gmail.com', 'aaaa', 'emmy', 'dupont', '1963-07-20', 'chemin du val', 95420, 'magny', '', (SELECT bank_account_id FROM bank_account WHERE holder = 'emmy dupont'),0),
+(5, 'admin@paymybuddy.com', 'admin1', 'aurelia', 'theret', '1984-04-13', 'rue de la plaine', 95420, 'magny', '0766665544', (SELECT bank_account_id FROM bank_account WHERE holder = 'aurelia theret'),1);
 
 
 INSERT INTO connexion(user_id, user_associate_id)

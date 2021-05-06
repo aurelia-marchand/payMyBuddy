@@ -109,21 +109,20 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
 
   /**
    * Service for unsuscribe user and set inactive profile
+   * @return 
    */
   @Override
-  public void unsuscribe(UserDto userDto) {
+  public UserBuddy unsuscribe(UserDto userDto) {
     UserBuddy user = new UserBuddy();
     
     user = userBuddyRepository.findByemail(userDto.getEmail());
     UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
     // set inactive
     userToUpdate.setActive(false);
-    String email = userToUpdate.getEmail();
     
-    // the user can re suscribe with the same email, but not sure to let this
-    userToUpdate.setEmail("unsuscribe"+email);
     UserBuddy userBuddy =  userBuddyRepository.save(userToUpdate);
     log.debug("user inactive: " + userBuddy);
+    return userBuddy;
   }
 
 }

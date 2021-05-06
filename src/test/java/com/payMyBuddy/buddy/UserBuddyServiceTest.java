@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.dto.UserProfileDto;
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
 import com.payMyBuddy.buddy.model.Account;
@@ -152,6 +153,32 @@ class UserBuddyServiceTest {
     userBuddyServiceImpl.existsUserBuddyByEmail("mail");
     //ASSERT
     verify(userBuddyRepository, times(1)).existsUserBuddyByEmail("mail");
+  }
+  
+  @Test
+  void testUnsuscribe() {
+    //ARRANGE
+    UserDto userDto = new UserDto();
+    userDto.setEmail("email");
+    userDto.setEmailConfirm("email");
+
+    UserBuddy user = new UserBuddy();
+    user.setActive(true);
+    user.setEmail("email");
+    user.setPassword("user");
+    
+    UserBuddy userToSave = new UserBuddy();
+    userToSave.setActive(true);
+    userToSave.setEmail("email");
+    userToSave.setPassword("user");
+    
+    when(userBuddyRepository.findByemail(userDto.getEmail())).thenReturn(user);
+    when(userBuddyRepository.getOne(user.getId())).thenReturn(userToSave);
+    when(userBuddyRepository.save(userToSave)).thenReturn(userToSave);
+    //ACT
+    UserBuddy userSave = userBuddyServiceImpl.unsuscribe(userDto);
+    //ASSERT
+    assertThat(userSave.isActive()).isEqualTo(false);
   }
 
 }

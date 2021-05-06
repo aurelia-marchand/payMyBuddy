@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.payMyBuddy.buddy.configuration.SecurityConfig;
 import com.payMyBuddy.buddy.controller.SuscribeController;
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
+import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.service.RoleServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
@@ -59,6 +60,13 @@ class SuscribeControllerTest {
   void testPostNewUser() throws Exception {
     // ARRANGE
     UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
+    
+    UserBuddy user = new UserBuddy();
+    user.setActive(true);
+    user.setEmail("user1@gmail.com");
+    user.setPassword("user");
+
+    when(userBuddyServiceI.findOne(userRegistrationDto.getEmail())).thenReturn(user);
 
     RequestBuilder request = post("/suscribe")
         .param("email", userRegistrationDto.getEmail())
@@ -79,6 +87,13 @@ class SuscribeControllerTest {
     userRegistrationDto.setEmail("user1@gmail.com");
     userRegistrationDto.setPassword("user");
     
+    UserBuddy user = new UserBuddy();
+    user.setActive(true);
+    user.setEmail("user1@gmail.com");
+    user.setPassword("user");
+
+    when(userBuddyServiceI.findOne(userRegistrationDto.getEmail())).thenReturn(user);
+
     when(userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())).thenReturn(true);
 
     RequestBuilder request = post("/suscribe")

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
+import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.service.RoleServiceI;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
@@ -47,7 +48,13 @@ public class SuscribeController {
   public String registerUserAccount(
       @ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
 
-    //Verify if user already exist
+    //Verify if user already exist or account inactive
+    UserBuddy user = userBuddyServiceI.findOne(userRegistrationDto.getEmail());
+    Boolean active = user.isActive();
+    
+    if(!active) {
+      return "redirect:/suscribe?inactive";
+    }
     if (userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())) {
       return "redirect:/suscribe?error";
     }

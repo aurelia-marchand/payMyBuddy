@@ -88,6 +88,7 @@ public class HomeController {
 
   /**
    * Form method post for transfer, payment or withdraw
+   * 
    * @param transactionDto
    * @return
    */
@@ -100,25 +101,26 @@ public class HomeController {
     UserBuddy user = userBuddyServiceI.findOne(username);
     Account account = accountServiceI.findByUserAccountId(user);
 
-    //Verify amount > 0
+    // Verify amount > 0
     if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
       transactionDto.setSenderId(account);
       String reponse = transactionServiceI.save(transactionDto);
       if (reponse == "success") {
+        log.info("Success payment, home page post transfer");
         return "redirect:/home?successPayment";
       } else if (reponse == "errorNotEnoughMoney") {
+        log.error("error not enough money, home page post transfer");
         return "redirect:/home?errorNotEnoughMoney";
-      } else {
-        return "redirect:/home?errorZero";
       }
-    } else {
-      return "redirect:/home?error";
     }
+    log.error("amount = 0, home page post transfer");
+    return "redirect:/home?errorZero";
 
   }
 
   /**
    * Form method post to add bank account
+   * 
    * @param bankAccountDto
    * @return
    */

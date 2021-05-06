@@ -19,6 +19,6 @@ public interface UserBuddyServiceI {
 
   UserBuddy save(UserProfileDto userDto);
 
-  void unsuscribe(UserDto userDto);
+  UserBuddy unsuscribe(UserDto userDto);
   
 }
