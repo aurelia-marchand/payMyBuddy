@@ -50,12 +50,12 @@ public class SuscribeController {
 
     //Verify if user already exist or account inactive
     UserBuddy user = userBuddyServiceI.findOne(userRegistrationDto.getEmail());
-    Boolean active = user.isActive();
-    
-    if(!active) {
-      return "redirect:/suscribe?inactive";
-    }
+
     if (userBuddyServiceI.existsUserBuddyByEmail(userRegistrationDto.getEmail())) {
+      Boolean active = user.isActive();
+      if(!active) {
+        return "redirect:/suscribe?inactive";
+      }
       return "redirect:/suscribe?error";
     }
      else {

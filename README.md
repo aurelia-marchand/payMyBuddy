@@ -1,4 +1,4 @@
-## Pay My Buddy 
+# Pay My Buddy 
 
 Prototype money transfer web application. The objective of this prototype to date is to set up the data access layer.  
  The web interface is based on the models provided and makes it possible to use the DAL layer.
@@ -54,9 +54,13 @@ USE pay_my_buddy;
 
 When the application is run for the first time, the tables will be created automatically using Spring Boot and Spring Data,  
 so there is no need to execute the commands provided in the sql file named schema.sql.
-However, before running the integration tests, you will have to create the database with the commands provided in the   
-create_db.sql file, the data.sql insertion file found in the resources folder of the tests will be executed automatically   
-at launch integration tests.
+However, before running the integration tests, you will have to create the database with the following commands :  
+CREATE DATABASE pay_my_buddy_test CHARACTER SET utf8;  
+USE pay_my_buddy_test;   
+The data.sql insertion file found in the resources folder of the tests will be executed automatically   
+at launch integration tests.  
+If you want to create the tables before running the application you can run the commands in the create-db.sql file in the resources folder  
+(as well as for the tests)
 
 # Running App
 
