@@ -40,6 +40,7 @@ After downloading the mysql 8 installer and installing it, you will be asked to 
 root account. This code uses the default root account to connect and the password can be set as rootroot.  
 If you add another user/credentials make sure to change the same in the code base.
 
+To run app and integration, add password to application.properties in resources folder to the app and also to the part test.
 it is recommended to change the username and password. the identifiers are in the application.properties file   
 in the resources folder. To run the integration tests, make sure to also modify the connection identifiers in the  
 application.properties file in the tests resources folder.  
