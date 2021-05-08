@@ -97,7 +97,7 @@ class TransactionServiceTest {
     //ASSERT
     assertThat(reponse).isEqualToIgnoringCase("success");
     assertThat(accountB.getBalance()).isEqualTo(new BigDecimal("200"));
-    assertThat(account.getBalance()).isEqualTo(new BigDecimal("0.00"));
+    assertThat(account.getBalance()).isEqualTo(new BigDecimal("4.50"));
   }
   
   @Test
