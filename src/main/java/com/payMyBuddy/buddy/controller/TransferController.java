@@ -99,16 +99,20 @@ public class TransferController {
     String username = authentication.getName();
     UserBuddy user = userBuddyServiceI.findOne(username);
     Account account = accountServiceI.findByUserAccountId(user);
-
     if (transactionDto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
       transactionDto.setSenderId(account);
       transactionDto.setType(Type.USER_TO_USER);
       log.debug("transactionController : " + transactionDto.getSenderId());
       String reponse = transactionServiceI.save(transactionDto);
+      log.debug("reponse : "+ reponse);
+      log.debug("transactionDto : "+ transactionDto);
+
       if (reponse == "success") {
         return "redirect:/transfer?successPayment";
       } else if (reponse == "errorNotEnoughMoney") {
         return "redirect:/transfer?errorNotEnoughMoney";
+      } else if (reponse == "inactive") {
+        return "redirect:/transfer?errorInactive";
       }
     }
     return "redirect:/transfer?errorZero";

@@ -61,10 +61,10 @@ class TransactionServiceTest {
   TransactionServiceImpl transactionServiceImpl;
 
   @Test
-  void testTransactionUserToUser() {
+  void testTransactionUserToUserInSuccessAccountBalanceAndFeeOk() {
     //ARRANGE
     Account account = new Account();
-    account.setBalance(new BigDecimal("150"));
+    account.setBalance(new BigDecimal("105"));
     account.setAccountId(1);
     UserBuddy user = new UserBuddy();
     user.setEmail("user1@gmail.com");
@@ -97,6 +97,7 @@ class TransactionServiceTest {
     //ASSERT
     assertThat(reponse).isEqualToIgnoringCase("success");
     assertThat(accountB.getBalance()).isEqualTo(new BigDecimal("200"));
+    assertThat(account.getBalance()).isEqualTo(new BigDecimal("0.00"));
   }
   
   @Test
@@ -135,10 +136,11 @@ class TransactionServiceTest {
     
     //ASSERT
     assertThat(reponse).isEqualToIgnoringCase("errorNotEnoughMoney");
+    assertThat(account.getBalance()).isEqualTo(new BigDecimal("100"));
   }
   
   @Test
-  void testTransactionBankPayment() {
+  void testTransactionBankPaymentBalanceUpdateOk() {
     //ARRANGE
     Account account = new Account();
     account.setBalance(new BigDecimal("100"));
@@ -149,14 +151,12 @@ class TransactionServiceTest {
     
     TransactionDto transac = new TransactionDto();
     transac.setAmount(new BigDecimal("100"));
-    
     transac.setDescription("payment");
     transac.setSenderId(account);
     
     
     when(userBuddyServiceI.findOne("user1@gmail.com")).thenReturn(user);
     when(accountServiceI.findByUserAccountId(user)).thenReturn(account);
-  
     when(bankPayment.requestAuthorization(Mockito.any(Transaction.class))).thenReturn(true);
     when(accountRepository.getOne(account.getAccountId())).thenReturn(account);
     
@@ -181,14 +181,12 @@ class TransactionServiceTest {
     
     TransactionDto transac = new TransactionDto();
     transac.setAmount(new BigDecimal("100"));
-    
     transac.setDescription("withdraw");
     transac.setSenderId(account);
     
     
     when(userBuddyServiceI.findOne("user1@gmail.com")).thenReturn(user);
     when(accountServiceI.findByUserAccountId(user)).thenReturn(account);
-  
     when(bankPayment.requestAuthorization(Mockito.any(Transaction.class))).thenReturn(true);
     when(accountRepository.getOne(account.getAccountId())).thenReturn(account);
     
@@ -213,14 +211,12 @@ class TransactionServiceTest {
     
     TransactionDto transac = new TransactionDto();
     transac.setAmount(new BigDecimal("105"));
-    
     transac.setDescription("withdraw");
     transac.setSenderId(account);
     
     
     when(userBuddyServiceI.findOne("user1@gmail.com")).thenReturn(user);
     when(accountServiceI.findByUserAccountId(user)).thenReturn(account);
-  
     when(bankPayment.requestAuthorization(Mockito.any(Transaction.class))).thenReturn(true);
     when(accountRepository.getOne(account.getAccountId())).thenReturn(account);
     

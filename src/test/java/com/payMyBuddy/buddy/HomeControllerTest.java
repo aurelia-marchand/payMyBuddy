@@ -78,15 +78,13 @@ class HomeControllerTest {
   @Before
   public void setup(){
    mockMvc= MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                           //Utiliser l'object mockMvc avec un contexte sécurisé par SpringSecurity.
                            .apply(springSecurity()).build();
 
   }
 
-  
   @Test
   @WithMockUser("user@gmail.com")
-  void testShouldReturnDefaultMessage() throws Exception {
+  void testShouldReturnMessageHome() throws Exception {
     //ARRANGE
     Collection<Role> roles = new HashSet<Role>();
     roles.add(new Role("ROLE_USER"));
@@ -106,9 +104,6 @@ class HomeControllerTest {
   
   @Test
   void testHomeNotAutorize() throws Exception {
-    //ARRANGE
-   
-    
     //ACT AND ASSERT
     this.mockMvc.perform(MockMvcRequestBuilders.get("/home").flashAttr("account", account)).andExpect(status().isUnauthorized());
     
@@ -135,6 +130,7 @@ class HomeControllerTest {
   }
   
   @Test
+  @WithMockUser("user@gmail.com")
   void testPostNewBankDetails() throws Exception {
     // ACT
     mockMvc

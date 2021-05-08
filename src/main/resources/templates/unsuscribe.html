@@ -53,10 +53,9 @@ body {
 	</nav>
 	<nav class="nav navbar-left bg-light">
 		<ul class="nav navbar-right">
-			<li class="nav-item"><a class="nav-link" href="home">Home 
-					/</a></li>
-					<li class="nav-item"><a class="nav-link active" href="unsuscribe">Unsuscribe
-					</a></li>
+			<li class="nav-item"><a class="nav-link" href="home">Home /</a></li>
+			<li class="nav-item"><a class="nav-link active"
+				href="unsuscribe">Unsuscribe </a></li>
 		</ul>
 	</nav>
 
@@ -74,17 +73,18 @@ body {
 				<div class="card bg-light mb-3 text-center">
 
 					<div class="card-body text-center">
-						
+
 						<br> <br>
 
 						<div>
-							
+
 							<div>
-							<!-- Form unsuscribe -->
-								<form th:action="@{/unsuscribe}" method="post" th:object="${user}">
+								<!-- Form unsuscribe -->
+								<form th:action="@{/unsuscribe}" method="post"
+									th:object="${user}">
 
 									<div class="form-group">
-									<!-- Email user confirm -->
+										<!-- Email user confirm -->
 										<label for="email">Confirm your email</label> <input
 											type="email" class="form-control" placeholder="email"
 											name="email" required autofocus="autofocus">
@@ -95,10 +95,15 @@ body {
 								</form>
 							</div>
 						</div>
-						
+
 						<!-- error message -->
 						<div th:if="${param.error}" class="mt-1">
 							<div class="alert alert-danger">Invalid username !</div>
+						</div>
+						<!-- error message monney -->
+						<div th:if="${param.errorMonney}" class="mt-1">
+							<div class="alert alert-danger">You still have money in
+								your account. Please make a withdrawal before unsubscribing !</div>
 						</div>
 					</div>
 				</div>

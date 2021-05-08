@@ -36,12 +36,9 @@ class UserBuddyIT {
   @Transactional
   @WithMockUser(username = "aur@gmail.com")
   void testfindUserByEmail() {
-    
     UserBuddy user = userBuddyRepository.findByemail("aur@gmail.com");
-    
-    log.debug("user : " + user);
+ 
     assertThat(user.getFirstName()).isEqualToIgnoringCase("aurelia");
-    
   }
   
   @Test
@@ -58,9 +55,6 @@ class UserBuddyIT {
     
     //ASSERT
     assertThat(userUpdate.getLastName()).isEqualToIgnoringCase("theret");
-    
-    UserBuddy userTest = userBuddyRepository.findByemail("aur@gmail.com");
-    log.debug("lastname : " + userTest.getLastName());
   }
 
 }

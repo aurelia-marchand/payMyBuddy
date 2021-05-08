@@ -57,7 +57,7 @@ class SuscribeControllerTest {
   }
 
   @Test
-  void testPostNewUser() throws Exception {
+  void testPostNewUserSuccess() throws Exception {
     // ARRANGE
     UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
     
@@ -72,12 +72,11 @@ class SuscribeControllerTest {
         .param("email", userRegistrationDto.getEmail())
         .param("password", userRegistrationDto.getPassword());
 
-    // ACT
+    // ACT AND ASSERT
     mockMvc
         .perform(request)
         .andDo(MockMvcResultHandlers.print())
         .andExpect(redirectedUrl("/suscribe?successRegistration"));
-    // ASSERT
   }
   
   @Test
@@ -100,12 +99,11 @@ class SuscribeControllerTest {
         .param("email", userRegistrationDto.getEmail())
         .param("password", userRegistrationDto.getPassword());
 
-    // ACT
+    // ACT AND ASSERT
     mockMvc
         .perform(request)
         .andDo(MockMvcResultHandlers.print())
         .andExpect(redirectedUrl("/suscribe?error"));
-    // ASSERT
   }
 
 }

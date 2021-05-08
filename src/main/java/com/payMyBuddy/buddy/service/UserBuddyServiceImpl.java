@@ -1,5 +1,6 @@
 package com.payMyBuddy.buddy.service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.payMyBuddy.buddy.dto.UserDto;
 import com.payMyBuddy.buddy.dto.UserProfileDto;
 import com.payMyBuddy.buddy.dto.UserRegistrationDto;
+import com.payMyBuddy.buddy.model.Account;
 import com.payMyBuddy.buddy.model.Role;
 import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.repository.UserBuddyRepository;
@@ -57,7 +59,7 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     user.setEmail(userRegistrationDto.getEmail());
     user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
     // TODO this to add an admin account, have to remove after create
-    if(userRegistrationDto.getEmail().equalsIgnoreCase("admin4@paymybuddy.com")) {
+    if(userRegistrationDto.getEmail().equalsIgnoreCase("admin@paymybuddy.com")) {
       user.setRoles(Arrays.asList(new Role("ROLE_ADMIN")));
     }else {
       user.setRoles(Arrays.asList(new Role("ROLE_USER")));
@@ -116,6 +118,10 @@ public class UserBuddyServiceImpl implements UserBuddyServiceI {
     UserBuddy user = new UserBuddy();
     
     user = userBuddyRepository.findByemail(userDto.getEmail());
+    Account account = accountServiceI.findByUserAccountId(user);
+    if(!account.getBalance().equals(new BigDecimal("0.00")) ){
+      return null;
+    }
     UserBuddy userToUpdate = userBuddyRepository.getOne(user.getId());
     // set inactive
     userToUpdate.setActive(false);

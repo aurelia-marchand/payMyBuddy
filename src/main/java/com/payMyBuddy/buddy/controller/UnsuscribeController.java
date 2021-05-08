@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.payMyBuddy.buddy.dto.UserDto;
+import com.payMyBuddy.buddy.model.UserBuddy;
 import com.payMyBuddy.buddy.service.UserBuddyServiceI;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,10 @@ public class UnsuscribeController {
     if (!userDto.getEmail().equalsIgnoreCase(userDto.getEmailConfirm())) {
       return "redirect:/unsuscribe?error";
   }
-      userBuddyServiceI.unsuscribe(userDto);
+      UserBuddy responseUser = userBuddyServiceI.unsuscribe(userDto);
+      if (responseUser == null) {
+        return "redirect:/unsuscribe?errorMonney";
+      }
       return "redirect:/login?unsuscribe";
     }
 }

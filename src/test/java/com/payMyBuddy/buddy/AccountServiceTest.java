@@ -26,43 +26,41 @@ import lombok.extern.slf4j.Slf4j;
 @WebMvcTest(AccountServiceImpl.class)
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
-  
+
   @MockBean
   @Qualifier("userDetailsServiceImpl")
   private UserDetailsService userDetailsService;
-  
+
   @MockBean
   AccountRepository accountRepository;
-  
+
   @MockBean
   UserBuddyServiceI userBuddyServiceI;
-  
+
   @Autowired
   AccountServiceImpl accountServiceImpl;
-  
-  
+
   Account account2 = new Account();
 
   @Test
-  void testNewAccount() {
-    //ARRANGE
+  void testNewAccountSuccess() {
+    // ARRANGE
     Account account = new Account();
     UserBuddy user = new UserBuddy();
     user.setId(1L);
     user.setEmail("user@gmail.com");
     user.setPassword("user");
-    
+
     account2.setAccountId(1L);
-    account2.setBalance(new BigDecimal("0"));;
+    account2.setBalance(new BigDecimal("0"));
     account2.setUserBuddy(user);
 
-    
-   when(accountRepository.save(account)).thenReturn(account2);
-    
-    //ACT
+    when(accountRepository.save(account)).thenReturn(account2);
+
+    // ACT
     String result = accountServiceImpl.save(user);
-    
-    //Assert
+
+    // Assert
     assertThat(account2.getUserBuddy()).isEqualTo(user);
     assertThat(result).isEqualToIgnoringCase("success");
 

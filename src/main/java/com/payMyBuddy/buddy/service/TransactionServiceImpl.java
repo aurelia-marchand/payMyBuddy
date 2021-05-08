@@ -1,6 +1,7 @@
 package com.payMyBuddy.buddy.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,14 +66,19 @@ public class TransactionServiceImpl implements TransactionServiceI {
       // recovery beneficiary mail and the user to find this account
       String email = transactionDto.getMailBeneficiary();
       UserBuddy userB = userBuddyServiceI.findOne(email);
+      // Verify if account beneficiary is active before transaction
+      if(!userB.isActive()) {
+        return "inactive";
+      }
       accountB = accountServiceI.findByUserAccountId(userB);
 
-      // update beneficiary id
+      // update beneficiary account
       transactionPayment.setBeneficiaryId(accountB);
 
       transactionPayment
-          .setFee(transactionDto.getAmount().multiply(new BigDecimal(BuddyConstant.FEE)));
-    
+          .setFee(transactionDto.getAmount().multiply(new BigDecimal(BuddyConstant.FEE)).setScale(2, RoundingMode.HALF_UP));
+      log.debug("frais : " + transactionPayment.getFee());
+
       // verify amount and balance account before doing the transaction
       if (transactionDto.getType().equals(Type.USER_TO_USER) && account.getBalance()
           .compareTo(transactionDto.getAmount().add(transactionPayment.getFee())) < 0) {
@@ -96,8 +102,10 @@ public class TransactionServiceImpl implements TransactionServiceI {
     // users and admin webApp, just return true for now
     if (bankPayment.requestAuthorization(transactionPayment)) {
 
+      // if bank return true save transaction else return error
       transactionRepository.save(transactionPayment);
 
+      // update account balance for withdraw, payment and between user
       Account accountToUpdate = accountRepository.getOne(account.getAccountId());
       // for withdraw
       if (transactionPayment.getDescription().equalsIgnoreCase("withdraw")) {
@@ -109,7 +117,6 @@ public class TransactionServiceImpl implements TransactionServiceI {
       } else {
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getAmount()));
         accountToUpdate.setBalance(account.getBalance().subtract(transactionPayment.getFee()));
-       
         Account accountBeneficiary = accountRepository.getOne(accountB.getAccountId());
         accountBeneficiary.setBalance(accountB.getBalance().add(transactionPayment.getAmount()));
         accountRepository.save(accountBeneficiary);

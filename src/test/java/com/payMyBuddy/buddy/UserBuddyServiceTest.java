@@ -5,6 +5,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -167,6 +169,10 @@ class UserBuddyServiceTest {
     user.setEmail("email");
     user.setPassword("user");
     
+    Account account = new Account();
+    account.setUserBuddy(user);
+    account.setBalance(new BigDecimal("0.00"));
+    
     UserBuddy userToSave = new UserBuddy();
     userToSave.setActive(true);
     userToSave.setEmail("email");
@@ -175,6 +181,8 @@ class UserBuddyServiceTest {
     when(userBuddyRepository.findByemail(userDto.getEmail())).thenReturn(user);
     when(userBuddyRepository.getOne(user.getId())).thenReturn(userToSave);
     when(userBuddyRepository.save(userToSave)).thenReturn(userToSave);
+    when(accountServiceI.findByUserAccountId(user)).thenReturn(account);
+    
     //ACT
     UserBuddy userSave = userBuddyServiceImpl.unsuscribe(userDto);
     //ASSERT

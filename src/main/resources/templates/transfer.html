@@ -89,6 +89,10 @@ body {
 						<div th:if="${param.errorNotEnoughMoney}" class = "mt-1">
 							<div class="alert alert-danger">not enough money !</div>
 						</div>
+						<!-- error message -->
+						<div th:if="${param.errorInactive}" class = "mt-1">
+							<div class="alert alert-danger">This account is inactive</div>
+						</div>
 						<!-- success message -->
 						<div th:if="${param.successPayment}" class = "mt-1">
 							<div class="alert alert-info">You've successfully do transfer !</div>

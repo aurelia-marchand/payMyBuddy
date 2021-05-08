@@ -47,8 +47,8 @@ class BankAccountServiceTest {
   
   
   @Test
-  void test() {
-    
+  void testNewBankAccountSetSuccess() {
+    //ARRANGE
     BankAccountDto bankAccountDto = new BankAccountDto();
     BankAccount bankAccount = new BankAccount();
     bankAccount.setAccountNumber("100s85s6669800000");
@@ -84,7 +84,6 @@ class BankAccountServiceTest {
     when(bankAccountRepository.save(bankAccount)).thenReturn(bankAccount);
     when(userBuddyServiceI.findOne(bankAccountDto.getEmail())).thenReturn(user);
     when(userBuddyRepository.getOne(user.getId())).thenReturn(userSave);
-    
     when(userBuddyRepository.save(userSave)).thenReturn(userSave);
 
     //ACT
@@ -92,6 +91,7 @@ class BankAccountServiceTest {
     assertThat(result).isEqualToIgnoringCase("success");
     
     BankAccount bankA = userSave.getBankAccount();
+    //ASSERT
     assertThat(bankA.getHolder()).isEqualToIgnoringCase("user user");
     
   }
